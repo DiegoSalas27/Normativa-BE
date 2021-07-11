@@ -1,4 +1,5 @@
 ﻿using Dominio;
+using FluentValidation;
 using MediatR;
 using Persistencia;
 using System;
@@ -18,6 +19,18 @@ namespace Aplicacion.Usuarios
             public string Contrasena { get; set; }
             public DateTime FechaNacimiento { get; set; }
             public int EspecialidadId { get; set; }
+        }
+
+        public class EjecutaValidacion : AbstractValidator<Ejecuta>
+        {
+            public EjecutaValidacion()
+            {
+                RuleFor(x => x.RolId).NotEmpty();
+                RuleFor(x => x.Correo).NotEmpty();
+                RuleFor(x => x.Contrasena).NotEmpty();
+                RuleFor(x => x.FechaNacimiento).NotEmpty();
+                RuleFor(x => x.EspecialidadId).NotEmpty();
+            }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>

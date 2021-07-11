@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using Aplicacion.ManejadorError;
+using MediatR;
 using Persistencia;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +30,7 @@ namespace Aplicacion.Usuarios
                 var usuario = await _context.Usuario.FindAsync(request.Id);
                 if (usuario == null)
                 {
-                    throw new Exception("No se econtro usuario");
+                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { curso = "No se encontro el usuario" });
                 }
 
                 _context.Remove(usuario);
