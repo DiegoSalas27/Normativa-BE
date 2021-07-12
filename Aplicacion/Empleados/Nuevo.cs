@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aplicacion.Usuarios
+namespace Aplicacion.Empleados
 {
     public class Nuevo
     {
@@ -42,7 +42,7 @@ namespace Aplicacion.Usuarios
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var usuario = new Usuario
+                var empleado = new Empleado
                 {
                     RolId = request.RolId,
                     Correo = request.Correo,
@@ -51,14 +51,14 @@ namespace Aplicacion.Usuarios
                     EspecialidadId = request.EspecialidadId
         };
 
-                _context.Usuario.Add(usuario);
+                _context.Empleado.Add(empleado);
                 var result = await _context.SaveChangesAsync();
                 if (result > 0) 
                 {
                     return Unit.Value;
                 }
 
-                throw new Exception("No se pudo insertar usuario");
+                throw new Exception("No se pudo insertar empleado");
             }
         }
     }

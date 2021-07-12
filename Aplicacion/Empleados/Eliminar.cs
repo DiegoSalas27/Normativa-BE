@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aplicacion.Usuarios
+namespace Aplicacion.Empleados
 {
     public class Eliminar
     {
@@ -27,13 +27,13 @@ namespace Aplicacion.Usuarios
 
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var usuario = await _context.Usuario.FindAsync(request.Id);
-                if (usuario == null)
+                var empleado = await _context.Empleado.FindAsync(request.Id);
+                if (empleado == null)
                 {
-                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { curso = "No se encontro el usuario" });
+                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { curso = "No se encontro el empleado" });
                 }
 
-                _context.Remove(usuario);
+                _context.Remove(empleado);
                 var result = await _context.SaveChangesAsync();
                 if (result > 0)
                 {

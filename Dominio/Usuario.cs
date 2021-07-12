@@ -1,24 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Dominio
 {
-    public class Usuario
+    public class Usuario : IdentityUser
     {
-        public int Id { get; set; }
-        public int RolId { get; set; }
-        public int EspecialidadId { get; set; }
-        public string Correo { get; set; }
-        public string Contrasena { get; set; }
-        public string Telefono { get; set; }
-        public string Nombres { get; set; }
-        public string Apellidos { get; set; }
-        public DateTime FechaNacimiento { get; set; }
-        public string Foto { get; set; }
-
-        public Roles Rol { get; set; }
-        public Especialidad Especialidad { get; set; }
-
+        public string NombreCompleto { get; set; }
     }
 }

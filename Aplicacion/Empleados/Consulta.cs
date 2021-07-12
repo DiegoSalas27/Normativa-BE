@@ -8,21 +8,21 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aplicacion.Usuarios
+namespace Aplicacion.Empleados
 {
     public class Consulta
     {
-        public class ListarUsuarios : IRequest<List<Usuario>> { }
-        public class Manejador : IRequestHandler<ListarUsuarios, List<Usuario>>
+        public class ListarEmpleados : IRequest<List<Empleado>> { }
+        public class Manejador : IRequestHandler<ListarEmpleados, List<Empleado>>
         {
             private readonly NormativaContext _context;
             public Manejador(NormativaContext context)
             {
                 this._context = context;
             }
-            public async Task<List<Usuario>> Handle(ListarUsuarios request, CancellationToken cancellationToken)
+            public async Task<List<Empleado>> Handle(ListarEmpleados request, CancellationToken cancellationToken)
             {
-                var usuarios = await _context.Usuario.ToListAsync();
+                var usuarios = await _context.Empleado.ToListAsync();
                 return usuarios;
             }
         }

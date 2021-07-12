@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aplicacion.Usuarios
+namespace Aplicacion.Empleados
 {
     public class Editar
     {
@@ -32,17 +32,17 @@ namespace Aplicacion.Usuarios
 
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var usuario = await _context.Usuario.FindAsync(request.Id);
-                if (usuario == null)
+                var empleado = await _context.Empleado.FindAsync(request.Id);
+                if (empleado == null)
                 {
-                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { curso = "No se encontro el usuario" });
+                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { curso = "No se encontro el empleado" });
                 }
 
-                usuario.RolId = request.RolId ?? usuario.RolId;
-                usuario.Correo = request.Correo ?? usuario.Correo;
-                usuario.Contrasena = request.Contrasena ?? usuario.Contrasena;
-                usuario.FechaNacimiento = request.FechaNacimiento ?? usuario.FechaNacimiento;
-                usuario.EspecialidadId  = request.EspecialidadId ?? usuario.EspecialidadId;
+                empleado.RolId = request.RolId ?? empleado.RolId;
+                empleado.Correo = request.Correo ?? empleado.Correo;
+                empleado.Contrasena = request.Contrasena ?? empleado.Contrasena;
+                empleado.FechaNacimiento = request.FechaNacimiento ?? empleado.FechaNacimiento;
+                empleado.EspecialidadId  = request.EspecialidadId ?? empleado.EspecialidadId;
 
                 var resultado = await _context.SaveChangesAsync();
                 if (resultado > 0)
@@ -50,7 +50,7 @@ namespace Aplicacion.Usuarios
                     return Unit.Value;
                 }
 
-                throw new Exception("El usuario no pudo ser editado");
+                throw new Exception("El empleado no pudo ser editado");
             }
         }
     }
