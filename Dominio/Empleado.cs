@@ -17,7 +17,6 @@ namespace Dominio
         public DateTime FechaNacimiento { get; set; }
         public string Foto { get; set; }
 
-        public Roles Rol { get; set; }
         public Especialidad Especialidad { get; set; }
 
     }

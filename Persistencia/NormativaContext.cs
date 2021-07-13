@@ -17,7 +17,6 @@ namespace Persistencia
         }
 
         public DbSet<Empleado> Empleado { get; set; }
-        public DbSet<Roles> Roles { get; set; }
         public DbSet<Especialidad> Especialidad { get; set; }
     }
 }
