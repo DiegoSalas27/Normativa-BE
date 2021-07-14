@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Aplicacion.Contratos;
 using Aplicacion.ManejadorError;
+using Aplicacion.Seguridad;
 using Dominio;
 using FluentValidation;
 using MediatR;
@@ -12,9 +14,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistencia;
 
-namespace Aplicacion.Seguridad
+namespace Seguridad
 {
-    public class Registrar
+    public class UsuarioActualizar
     {
         public class Ejecuta : IRequest<UsuarioData>
         {
@@ -35,7 +37,6 @@ namespace Aplicacion.Seguridad
                 RuleFor(x => x.Password).NotEmpty();
                 RuleFor(x => x.Username).NotEmpty();
             }
-
         }
 
         public class Manejador : IRequestHandler<Ejecuta, UsuarioData>
@@ -43,50 +44,53 @@ namespace Aplicacion.Seguridad
             private readonly NormativaContext _context;
             private readonly UserManager<Usuario> _userManager;
             private readonly IJwtGenerador _jwtGenerador;
+            private readonly IPasswordHasher<Usuario> _passwordHasher;
             public Manejador(
                 NormativaContext context,
                 UserManager<Usuario> userManager,
-                IJwtGenerador jwtGenerador)
+                IJwtGenerador jwtGenerador,
+                IPasswordHasher<Usuario> passwordHasher)
             {
                 _context = context;
                 _userManager = userManager;
                 _jwtGenerador = jwtGenerador;
+                _passwordHasher = passwordHasher;
             }
             public async Task<UsuarioData> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var existe = await _context.Users.Where(x => x.Email == request.Email).AnyAsync();
-                if (existe)
+                var usuario = await _userManager.FindByNameAsync(request.Username);
+                if (usuario == null)
                 {
-                    throw new ManejadorExcepcion(HttpStatusCode.BadRequest, new { mensaje = "El email ingresado ya existe" });
+                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensaje = "El usuario no existe" });
                 }
 
-                var existeUsername = await _context.Users.Where(x => x.UserName == request.Username).AnyAsync();
-                if (existeUsername)
+                var otherUserExist = await _context.Users.Where(x => x.Email == request.Email && x.UserName != request.Username).AnyAsync();
+                if (otherUserExist)
                 {
-                    throw new ManejadorExcepcion(HttpStatusCode.BadRequest, new { mensaje = "El nombre de usuario ingresado ya existe" });
+                    throw new ManejadorExcepcion(HttpStatusCode.InternalServerError, new { mensaje = "Ya existe un usu" });
                 }
 
-                var usuario = new Usuario
-                {
-                    NombreCompleto = request.Nombre + " " + request.Apellidos,
-                    Email = request.Email,
-                    UserName = request.Username
-                };
+                usuario.Email = request.Email ?? usuario.Email;
+                usuario.NombreCompleto = request.Nombre + " " + request.Apellidos ?? usuario.NombreCompleto;
+                usuario.PasswordHash = _passwordHasher.HashPassword(usuario, request.Password) ?? usuario.PasswordHash;
+                usuario.UserName = request.Username ?? usuario.UserName;
 
-                // LLamar a metodo para insertar usuario
-                var result = await _userManager.CreateAsync(usuario, request.Password);
-                if (result.Succeeded)
+                var resultado = await _userManager.UpdateAsync(usuario);
+                var resultadoRoles = await _userManager.GetRolesAsync(usuario);
+                var listaRoles = new List<string>(resultadoRoles);
+
+                if (resultado.Succeeded)
                 {
                     return new UsuarioData
                     {
+                        Email = usuario.Email,
+                        Username = usuario.NombreCompleto,
                         NombreCompleto = usuario.NombreCompleto,
-                        Token = _jwtGenerador.CrearToken(usuario, null),
-                        Username = usuario.UserName,
-                        Email = usuario.Email
+                        Token = _jwtGenerador.CrearToken(usuario, listaRoles)
                     };
                 }
 
-                throw new Exception("No se pudo agregar al nuevo usuario");
+                throw new Exception("No se pudo actualizar usuario");
             }
         }
     }

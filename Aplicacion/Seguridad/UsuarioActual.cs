@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Aplicacion.Contratos;
 using Dominio;
@@ -26,12 +27,14 @@ namespace Aplicacion.Seguridad
             public async Task<UsuarioData> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
                 var usuario = await _userManager.FindByNameAsync(_usuarioSesion.ObtenerUsuarioSesion());
+                var resultadoRoles = await _userManager.GetRolesAsync(usuario);
+                var listaRoles = new List<string>(resultadoRoles);
 
                 return new UsuarioData
                 {
                     NombreCompleto = usuario.NombreCompleto,
                     Username = usuario.UserName,
-                    Token = _jwtGenerador.CrearToken(usuario),
+                    Token = _jwtGenerador.CrearToken(usuario, listaRoles),
                     Imagen = null,
                     Email = usuario.Email
                 };
