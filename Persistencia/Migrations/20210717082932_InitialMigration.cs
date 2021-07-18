@@ -26,7 +26,11 @@ namespace Persistencia.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    NombreCompleto = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EspecialidadId = table.Column<int>(type: "int", nullable: false),
+                    Nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -58,19 +62,6 @@ namespace Persistencia.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Especialidad", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,39 +170,6 @@ namespace Persistencia.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Empleado",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RolId = table.Column<int>(type: "int", nullable: false),
-                    EspecialidadId = table.Column<int>(type: "int", nullable: false),
-                    Correo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Contrasena = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Empleado", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Empleado_Especialidad_EspecialidadId",
-                        column: x => x.EspecialidadId,
-                        principalTable: "Especialidad",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Empleado_Roles_RolId",
-                        column: x => x.RolId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -250,18 +208,6 @@ namespace Persistencia.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Empleado_EspecialidadId",
-                table: "Empleado",
-                column: "EspecialidadId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Empleado_RolId",
-                table: "Empleado",
-                column: "RolId",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -282,19 +228,13 @@ namespace Persistencia.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Empleado");
+                name: "Especialidad");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Especialidad");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
         }
     }
 }

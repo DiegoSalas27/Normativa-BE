@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Aplicacion.Contratos;
+﻿using Aplicacion.Contratos;
 using Dominio;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aplicacion.Seguridad
 {
-    public class UsuarioActual
+    public class ObtenerUsuario
     {
-        public class Ejecuta : IRequest<UsuarioData> { }
+        public class Ejecuta : IRequest<UsuarioData> 
+        { 
+            public string userId { get; set; }
+        }
 
         public class Manejador : IRequestHandler<Ejecuta, UsuarioData>
         {
@@ -26,7 +32,7 @@ namespace Aplicacion.Seguridad
 
             public async Task<UsuarioData> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var usuario = await _userManager.FindByNameAsync(_usuarioSesion.ObtenerUsuarioSesion());
+                var usuario = await _userManager.FindByIdAsync(request.userId);
                 var resultadoRoles = await _userManager.GetRolesAsync(usuario);
                 var listaRoles = new List<string>(resultadoRoles);
 

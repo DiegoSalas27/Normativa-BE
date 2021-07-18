@@ -18,22 +18,27 @@ namespace Aplicacion.Seguridad
     {
         public class Ejecuta : IRequest<UsuarioData>
         {
-            public string Nombre { get; set; }
-            public string Apellidos { get; set; }
-            public string Email { get; set; }
-            public string Password { get; set; }
-            public string Username { get; set; }
+            public string? Nombres { get; set; }
+            public string? Apellidos { get; set; }
+            public string? Password { get; set; }
+
+            public string? Token { get; set; }
+            public string? Email { get; set; }
+            public string? Username { get; set; }
+            public string? Imagen { get; set; }
+            public string? Rol { get; set; }
+            public string? PhoneNumber { get; set; }
+            public DateTime FechaNacimiento { get; set; }
         }
 
         public class EjecutaValidador : AbstractValidator<Ejecuta>
         {
             public EjecutaValidador()
             {
-                RuleFor(x => x.Nombre).NotEmpty();
+                RuleFor(x => x.Nombres).NotEmpty();
                 RuleFor(x => x.Apellidos).NotEmpty();
                 RuleFor(x => x.Email).NotEmpty();
                 RuleFor(x => x.Password).NotEmpty();
-                RuleFor(x => x.Username).NotEmpty();
             }
 
         }
@@ -43,17 +48,28 @@ namespace Aplicacion.Seguridad
             private readonly NormativaContext _context;
             private readonly UserManager<Usuario> _userManager;
             private readonly IJwtGenerador _jwtGenerador;
+            private readonly RoleManager<IdentityRole> _roleManager;
+
             public Manejador(
                 NormativaContext context,
                 UserManager<Usuario> userManager,
+                RoleManager<IdentityRole> roleManager,
                 IJwtGenerador jwtGenerador)
             {
                 _context = context;
                 _userManager = userManager;
                 _jwtGenerador = jwtGenerador;
+                _roleManager = roleManager;
             }
             public async Task<UsuarioData> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
+                var rol = await _roleManager.FindByNameAsync(request.Rol);
+                if (rol == null)
+                {
+                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensajge = "El rol no existe" });
+                }
+
+
                 var existe = await _context.Users.Where(x => x.Email == request.Email).AnyAsync();
                 if (existe)
                 {
@@ -68,22 +84,40 @@ namespace Aplicacion.Seguridad
 
                 var usuario = new Usuario
                 {
-                    NombreCompleto = request.Nombre + " " + request.Apellidos,
+                    Nombres = request.Nombres,
+                    Apellidos = request.Apellidos,
                     Email = request.Email,
-                    UserName = request.Username
+                    UserName = request.Nombres + request.Apellidos,
+                    Foto = request.Imagen,
+                    PhoneNumber = request.PhoneNumber,
+                    FechaNacimiento = request.FechaNacimiento,
                 };
 
                 // LLamar a metodo para insertar usuario
                 var result = await _userManager.CreateAsync(usuario, request.Password);
+
                 if (result.Succeeded)
                 {
-                    return new UsuarioData
+
+                    var userCreated = await _userManager.FindByNameAsync(request.Nombres + request.Apellidos);
+
+                    var user = await _userManager.AddToRoleAsync(userCreated, request.Rol);
+
+                    if (user.Succeeded)
                     {
-                        NombreCompleto = usuario.NombreCompleto,
-                        Token = _jwtGenerador.CrearToken(usuario, null),
-                        Username = usuario.UserName,
-                        Email = usuario.Email
-                    };
+
+                        return new UsuarioData
+                        {
+                            Nombres = usuario.Nombres,
+                            Apellidos = usuario.Apellidos,
+                            Token = _jwtGenerador.CrearToken(usuario, null),
+                            Username = usuario.UserName,
+                            Email = usuario.Email
+                        };
+
+                        throw new Exception("No se pudo agregar al nuevo usuario");
+                    }
+
                 }
 
                 throw new Exception("No se pudo agregar al nuevo usuario");

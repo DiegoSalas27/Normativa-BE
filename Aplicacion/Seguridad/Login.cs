@@ -56,11 +56,15 @@ namespace Aplicacion.Seguridad
                 {
                     return new UsuarioData
                     {
-                        NombreCompleto = usuario.NombreCompleto,
+                        Nombres = usuario.Nombres,
+                        Apellidos = usuario.Apellidos,
                         Token = _jwtGenerador.CrearToken(usuario, listaRoles),
                         Username = usuario.UserName,
                         Email = usuario.Email,
-                        Imagen = null
+                        Imagen = null,
+                        Rol = listaRoles.Count > 0 ? listaRoles[0] : null,
+                        PhoneNumber = usuario.PhoneNumber,
+                        FechaNacimiento = usuario.FechaNacimiento,
                     };
                 }
 

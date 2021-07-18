@@ -10,7 +10,7 @@ using Persistencia;
 namespace Persistencia.Migrations
 {
     [DbContext(typeof(NormativaContext))]
-    [Migration("20210712031350_InitialMigration")]
+    [Migration("20210717082932_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,51 +20,6 @@ namespace Persistencia.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Dominio.Empleado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Apellidos")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Contrasena")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Correo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EspecialidadId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaNacimiento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Foto")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombres")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RolId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Telefono")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EspecialidadId")
-                        .IsUnique();
-
-                    b.HasIndex("RolId")
-                        .IsUnique();
-
-                    b.ToTable("Empleado");
-                });
 
             modelBuilder.Entity("Dominio.Especialidad", b =>
                 {
@@ -81,21 +36,6 @@ namespace Persistencia.Migrations
                     b.ToTable("Especialidad");
                 });
 
-            modelBuilder.Entity("Dominio.Roles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("Dominio.Usuario", b =>
                 {
                     b.Property<string>("Id")
@@ -103,6 +43,9 @@ namespace Persistencia.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Apellidos")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -115,13 +58,22 @@ namespace Persistencia.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("EspecialidadId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Foto")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("NombreCompleto")
+                    b.Property<string>("Nombres")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -295,25 +247,6 @@ namespace Persistencia.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Dominio.Empleado", b =>
-                {
-                    b.HasOne("Dominio.Especialidad", "Especialidad")
-                        .WithOne("Empleado")
-                        .HasForeignKey("Dominio.Empleado", "EspecialidadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Dominio.Roles", "Rol")
-                        .WithOne("Empleado")
-                        .HasForeignKey("Dominio.Empleado", "RolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Especialidad");
-
-                    b.Navigation("Rol");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -363,16 +296,6 @@ namespace Persistencia.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Dominio.Especialidad", b =>
-                {
-                    b.Navigation("Empleado");
-                });
-
-            modelBuilder.Entity("Dominio.Roles", b =>
-                {
-                    b.Navigation("Empleado");
                 });
 #pragma warning restore 612, 618
         }

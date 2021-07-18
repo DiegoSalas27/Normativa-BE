@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Aplicacion.Seguridad;
 using Dominio;
 using MediatR;
@@ -30,17 +31,32 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new UsuarioActual.Ejecuta());
         }
 
-        [HttpPut] // Unauthorized
+        [Authorize(Roles = "Administrador")] 
+        [HttpGet("{id}")] 
+        public async Task<ActionResult<UsuarioData>> ObtenerUsuarioPorNombre(string id)
+        {
+            return await Mediator.Send(new ObtenerUsuario.Ejecuta { userId = id });
+        }
+
+        [Authorize(Roles = "Administrador")] // Unauthorized
+        [HttpPut]
         public async Task<ActionResult<UsuarioData>> Actualizar(UsuarioActualizar.Ejecuta parametros)
         {
             return await Mediator.Send(parametros);
         }
 
         [Authorize(Roles = "Administrador")] // Forbidden
-        [HttpDelete("{username}")] // Este metodo solo es potestad del administrador
-        public async Task<ActionResult<Unit>> EliminarUsuario(string username)
+        [HttpDelete("{id}")] // Este metodo solo es potestad del administrador
+        public async Task<ActionResult<Unit>> EliminarUsuario(string id)
         {
-            return await Mediator.Send(new UsuarioEliminar.Ejecuta { Nombreusuario = username });
+            return await Mediator.Send(new UsuarioEliminar.Ejecuta { Id = id });
+        }
+
+        [Authorize(Roles = "Administrador")]
+        [HttpGet("listar/{rol}")]
+        public async Task<ActionResult<List<UsuarioData>>> ObtenerUsuariosPorRol(string rol)
+        {
+            return await Mediator.Send(new UsuarioListar.ListarUsuarios { Rol = rol });
         }
     }
 }

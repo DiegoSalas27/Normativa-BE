@@ -1,5 +1,5 @@
 using Aplicacion.Contratos;
-using Aplicacion.Empleados;
+using Aplicacion.Seguridad;
 using Dominio;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -32,6 +32,7 @@ namespace Normativa
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -46,12 +47,12 @@ namespace Normativa
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-            services.AddMediatR(typeof(Consulta.Manejador).Assembly);
+            services.AddMediatR(typeof(Registrar).Assembly);
             services.AddControllers(opt => {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             })
-                .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Nuevo>());
+                .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Registrar>());
 
             var builder = services.AddIdentityCore<Usuario>();
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
@@ -77,6 +78,16 @@ namespace Normativa
                 };
             });
 
+            services.AddCors(options => {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:8080")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             services.AddScoped<IJwtGenerador, JwtGenerador>();
             services.AddScoped<IUsuarioSesion, UsuarioSesion>();
         }
@@ -95,6 +106,8 @@ namespace Normativa
             app.UseAuthentication();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

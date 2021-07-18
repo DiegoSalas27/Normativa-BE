@@ -16,7 +16,7 @@ namespace Aplicacion.Seguridad
     {
         public class Ejecuta : IRequest
         {
-            public string Nombreusuario { get; set; }
+            public string Id { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -31,7 +31,7 @@ namespace Aplicacion.Seguridad
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var usuario = await _userManager.FindByNameAsync(request.Nombreusuario);
+                var usuario = await _userManager.FindByIdAsync(request.Id);
                 if (usuario == null)
                 {
                     throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensaje = "El usuario no existe" });

@@ -16,7 +16,6 @@ namespace Persistencia
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Empleado> Empleado { get; set; }
         public DbSet<Especialidad> Especialidad { get; set; }
     }
 }
