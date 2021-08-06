@@ -6,7 +6,9 @@ namespace Dominio
 {
     public class Especialidad
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Descripcion { get; set; }
+
+        public Guid RolId { get; set; }
     }
 }

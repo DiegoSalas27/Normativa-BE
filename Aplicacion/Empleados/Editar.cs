@@ -12,7 +12,7 @@
 //{
 //    public class Editar
 //    {
-//        public class Ejecuta : IRequest 
+//        public class Ejecuta : IRequest
 //        {
 //            public int Id { get; set; }
 //            public int? RolId { get; set; }
@@ -42,7 +42,7 @@
 //                empleado.Correo = request.Correo ?? empleado.Correo;
 //                empleado.Contrasena = request.Contrasena ?? empleado.Contrasena;
 //                empleado.FechaNacimiento = request.FechaNacimiento ?? empleado.FechaNacimiento;
-//                empleado.EspecialidadId  = request.EspecialidadId ?? empleado.EspecialidadId;
+//                empleado.EspecialidadId = request.EspecialidadId ?? empleado.EspecialidadId;
 
 //                var resultado = await _context.SaveChangesAsync();
 //                if (resultado > 0)

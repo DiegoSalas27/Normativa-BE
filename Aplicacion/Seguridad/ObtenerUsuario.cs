@@ -2,6 +2,7 @@
 using Dominio;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Persistencia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +21,16 @@ namespace Aplicacion.Seguridad
 
         public class Manejador : IRequestHandler<Ejecuta, UsuarioData>
         {
+            private readonly NormativaContext _context;
             private readonly UserManager<Usuario> _userManager;
             private readonly IJwtGenerador _jwtGenerador;
             private readonly IUsuarioSesion _usuarioSesion;
-            public Manejador(UserManager<Usuario> userManager, IJwtGenerador jwtGenerador, IUsuarioSesion usuarioSesion)
+            public Manejador(UserManager<Usuario> userManager, IJwtGenerador jwtGenerador, IUsuarioSesion usuarioSesion, NormativaContext context)
             {
                 _userManager = userManager;
                 _jwtGenerador = jwtGenerador;
                 _usuarioSesion = usuarioSesion;
+                _context = context;
             }
 
             public async Task<UsuarioData> Handle(Ejecuta request, CancellationToken cancellationToken)
@@ -35,6 +38,7 @@ namespace Aplicacion.Seguridad
                 var usuario = await _userManager.FindByIdAsync(request.userId);
                 var resultadoRoles = await _userManager.GetRolesAsync(usuario);
                 var listaRoles = new List<string>(resultadoRoles);
+                var especialidad = await _context.Especialidad.FindAsync(usuario.EspecialidadId);
 
                 return new UsuarioData
                 {
@@ -47,6 +51,8 @@ namespace Aplicacion.Seguridad
                     Rol = listaRoles.Count > 0 ? listaRoles[0] : null,
                     PhoneNumber = usuario.PhoneNumber,
                     FechaNacimiento = usuario.FechaNacimiento,
+                    Codigo = usuario.Codigo,
+                    Especialidad = especialidad?.Descripcion
                 };
             }
         }

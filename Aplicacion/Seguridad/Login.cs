@@ -45,7 +45,7 @@ namespace Aplicacion.Seguridad
                 var usuario = await _userManager.FindByEmailAsync(request.Email);
                 if (usuario == null)
                 {
-                    throw new ManejadorExcepcion(HttpStatusCode.Unauthorized, new { curso = "Correo o contraseña incorrecto" });
+                    throw new ManejadorExcepcion(HttpStatusCode.Unauthorized, new { usuario = "Correo o contraseña incorrecto" });
                 }
 
                 var result = await _signInManager.CheckPasswordSignInAsync(usuario, request.Password, false);
@@ -68,7 +68,7 @@ namespace Aplicacion.Seguridad
                     };
                 }
 
-                throw new ManejadorExcepcion(HttpStatusCode.Unauthorized, new { curso = "Correo o contraseña incorrecto" });
+                throw new ManejadorExcepcion(HttpStatusCode.Unauthorized, new { usuario = "Correo o contraseña incorrecto" });
             }
         }
     }

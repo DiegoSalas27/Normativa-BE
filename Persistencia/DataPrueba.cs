@@ -14,11 +14,13 @@ namespace Persistencia
             {
                 var usuario = new Usuario
                 {
+                    PhoneNumber = "959363398",
                     Nombres = "Diego",
                     Apellidos = "Salas Noain",
                     FechaNacimiento = new DateTime(1991, 08, 08),
                     UserName = "diegosalas",
-                    Email = "diegosalas27@gmail.com"
+                    Email = "diegosalas27@gmail.com",
+                    Codigo = "AD001"
                 };
                 await usuarioManager.CreateAsync(usuario, "Password123$");
             }

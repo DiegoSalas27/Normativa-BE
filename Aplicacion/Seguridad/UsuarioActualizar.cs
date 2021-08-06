@@ -20,17 +20,18 @@ namespace Seguridad
     {
         public class Ejecuta : IRequest<UsuarioData>
         {
-            public string ?Nombres { get; set; }
-            public string? Apellidos { get; set; }
-            public string? Password { get; set; }
+            public string Nombres { get; set; }
+            public string Apellidos { get; set; }
+            public string Password { get; set; }
 
-            public string? Token { get; set; }
-            public string? Email { get; set; }
-            public string? Username { get; set; }
-            public string? Imagen { get; set; }
-            public string? Rol { get; set; }
-            public string? PhoneNumber { get; set; }
+            public string Token { get; set; }
+            public string Email { get; set; }
+            public string Username { get; set; }
+            public string Imagen { get; set; }
+            public string Rol { get; set; }
+            public string PhoneNumber { get; set; }
             public DateTime? FechaNacimiento { get; set; }
+            public string Especialidad { get; set; }
         }
 
         //public class EjecutaValidador : AbstractValidator<Ejecuta>
@@ -85,6 +86,8 @@ namespace Seguridad
                     throw new ManejadorExcepcion(HttpStatusCode.InternalServerError, new { mensaje = "Ya existe un usuario" });
                 }
 
+                var especialidad = request.Especialidad != null ? _context.Especialidad.Where(x => x.Descripcion == request.Especialidad).First() : null;
+
                 usuario.Email = request.Email ?? usuario.Email;
                 usuario.Nombres = request.Nombres ?? usuario.Nombres;
                 usuario.Apellidos = request.Apellidos ?? usuario.Apellidos;
@@ -96,6 +99,7 @@ namespace Seguridad
                     usuario.PasswordHash = usuario.PasswordHash;
                 }
                 usuario.UserName = request.Username ?? usuario.UserName;
+                usuario.EspecialidadId = especialidad != null ? especialidad.Id : null;
 
                 var roles_usuario = await _userManager.GetRolesAsync(usuario);
                 var removedRoles = await _userManager.RemoveFromRolesAsync(usuario, roles_usuario);

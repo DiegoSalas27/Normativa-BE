@@ -1,4 +1,5 @@
 using Aplicacion.Contratos;
+using Aplicacion.ListaVerificaciones;
 using Aplicacion.Seguridad;
 using Dominio;
 using FluentValidation.AspNetCore;
@@ -20,6 +21,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Persistencia;
+using Persistencia.DapperConexion;
+using Persistencia.DapperConexion.Paginacion;
 using Seguridad;
 using System;
 using System.Collections.Generic;
@@ -47,6 +50,9 @@ namespace Normativa
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddOptions();
+            services.Configure<ConexionConfiguration>(Configuration.GetSection("ConnectionStrings")); 
+
             services.AddMediatR(typeof(Registrar).Assembly);
             services.AddControllers(opt => {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -88,8 +94,11 @@ namespace Normativa
                     });
             });
 
+            services.AddTransient<IFactoryConnection, FactoryConnection>();
             services.AddScoped<IJwtGenerador, JwtGenerador>();
             services.AddScoped<IUsuarioSesion, UsuarioSesion>();
+            services.AddScoped<IPaginacion, PaginacionRepositorio>();
+            services.AddAutoMapper(typeof(Consulta.Manejador));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

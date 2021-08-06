@@ -18,17 +18,18 @@ namespace Aplicacion.Seguridad
     {
         public class Ejecuta : IRequest<UsuarioData>
         {
-            public string? Nombres { get; set; }
-            public string? Apellidos { get; set; }
-            public string? Password { get; set; }
+            public string Nombres { get; set; }
+            public string Apellidos { get; set; }
+            public string Password { get; set; }
 
-            public string? Token { get; set; }
-            public string? Email { get; set; }
-            public string? Username { get; set; }
-            public string? Imagen { get; set; }
-            public string? Rol { get; set; }
-            public string? PhoneNumber { get; set; }
+            public string Token { get; set; }
+            public string Email { get; set; }
+            public string Username { get; set; }
+            public string Imagen { get; set; }
+            public string Rol { get; set; }
+            public string PhoneNumber { get; set; }
             public DateTime FechaNacimiento { get; set; }
+            public string Especialidad { get; set; }
         }
 
         public class EjecutaValidador : AbstractValidator<Ejecuta>
@@ -66,7 +67,7 @@ namespace Aplicacion.Seguridad
                 var rol = await _roleManager.FindByNameAsync(request.Rol);
                 if (rol == null)
                 {
-                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensajge = "El rol no existe" });
+                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensaje = "El rol no existe" });
                 }
 
 
@@ -82,6 +83,32 @@ namespace Aplicacion.Seguridad
                     throw new ManejadorExcepcion(HttpStatusCode.BadRequest, new { mensaje = "El nombre de usuario ingresado ya existe" });
                 }
 
+                var numUsersInRol = _userManager.GetUsersInRoleAsync(request.Rol).Result.Count;
+
+                var codigoGenerado = "";
+                var zeroCount = "";
+
+                if (numUsersInRol < 10)
+                {
+                    zeroCount = "00";
+                }
+                else
+                {
+                    zeroCount = "0";
+                }
+
+                switch (rol.Name)
+                {
+                    case "Analistas": codigoGenerado = "AN" + zeroCount + (numUsersInRol + 1).ToString(); break;
+                    case "Administrador": codigoGenerado = "AD" + zeroCount + (numUsersInRol + 1).ToString(); break;
+                    case "Jefe de riesgos": codigoGenerado = "JF" + zeroCount + (numUsersInRol + 1).ToString(); break;
+                    case "Alta gerencia": codigoGenerado = "AG" + zeroCount + (numUsersInRol + 1).ToString(); break;
+                }
+
+        
+                var especialidad = _context.Especialidad.Where(x => x.Descripcion == request.Especialidad).FirstOrDefault();
+        
+
                 var usuario = new Usuario
                 {
                     Nombres = request.Nombres,
@@ -91,6 +118,8 @@ namespace Aplicacion.Seguridad
                     Foto = request.Imagen,
                     PhoneNumber = request.PhoneNumber,
                     FechaNacimiento = request.FechaNacimiento,
+                    Codigo = codigoGenerado,
+                    EspecialidadId = especialidad?.Id,
                 };
 
                 // LLamar a metodo para insertar usuario

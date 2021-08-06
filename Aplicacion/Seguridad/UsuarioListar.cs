@@ -21,28 +21,35 @@ namespace Aplicacion.Seguridad
         public class Manejador : IRequestHandler<ListarUsuarios, List<UsuarioData>>
         {
             private readonly UserManager<Usuario> _userManager;
-            public Manejador(UserManager<Usuario> userManager)
+            private readonly NormativaContext _context;
+            public Manejador(UserManager<Usuario> userManager, NormativaContext context)
             {
                 _userManager = userManager;
+                _context = context;
             }
 
             public async Task<List<UsuarioData>> Handle(ListarUsuarios request, CancellationToken cancellationToken)
             {
                 var usuarios = await _userManager.GetUsersInRoleAsync(request.Rol);
                 var usuarioData = new List<UsuarioData>();
+
                 foreach (var usuario in usuarios) 
                 {
+                    var especialidad = usuario.EspecialidadId != null ? await  _context.Especialidad.FindAsync(usuario.EspecialidadId) : null;
+
                     usuarioData.Add(new UsuarioData
                     {   
                         Id = usuario.Id,
-                        Codigo = "",
-                        Especialidad = "",
+                        Codigo = usuario.Codigo,
+                        Especialidad = especialidad != null ? especialidad.Descripcion : null,
                         Nombre = usuario.Nombres + ' ' + usuario.Apellidos,
                         Nombres = usuario.Nombres,
                         Apellidos = usuario.Apellidos,
                         Email = usuario.Email,
                         PhoneNumber = usuario.PhoneNumber,
                         FechaNacimiento = usuario.FechaNacimiento,
+                        Username = usuario.UserName,
+                        Rol = request.Rol,
                         Entity = "usuario"
                     });
                 }

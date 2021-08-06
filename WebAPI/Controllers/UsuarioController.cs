@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Aplicacion.Paginacion;
 using Aplicacion.Seguridad;
 using Dominio;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Persistencia.DapperConexion.Paginacion;
 using Seguridad;
 
 namespace WebAPI.Controllers
@@ -33,7 +35,7 @@ namespace WebAPI.Controllers
 
         [Authorize(Roles = "Administrador")] 
         [HttpGet("{id}")] 
-        public async Task<ActionResult<UsuarioData>> ObtenerUsuarioPorNombre(string id)
+        public async Task<ActionResult<UsuarioData>> ObtenerUsuarioPorId(string id)
         {
             return await Mediator.Send(new ObtenerUsuario.Ejecuta { userId = id });
         }
@@ -52,11 +54,19 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new UsuarioEliminar.Ejecuta { Id = id });
         }
 
+        //[Authorize(Roles = "Administrador")]
+        //[HttpGet("listar/{rol}")]
+        //public async Task<ActionResult<List<UsuarioData>>> ObtenerUsuariosPorRol(string rol)
+        //{
+        //    return await Mediator.Send(new UsuarioListar.ListarUsuarios { Rol = rol });
+        //}
+
         [Authorize(Roles = "Administrador")]
         [HttpGet("listar/{rol}")]
-        public async Task<ActionResult<List<UsuarioData>>> ObtenerUsuariosPorRol(string rol)
+        public async Task<ActionResult<PaginacionModel>> ObtenerUsuariosPorRolPaginado(string rol, 
+            [FromQuery(Name="page")] int page, [FromQuery(Name = "quantity")] int quantity)
         {
-            return await Mediator.Send(new UsuarioListar.ListarUsuarios { Rol = rol });
+            return await Mediator.Send(new Paginacion.Ejecuta { Rol = rol, NumeroPagina = page, CantidadElementos = quantity });
         }
     }
 }
