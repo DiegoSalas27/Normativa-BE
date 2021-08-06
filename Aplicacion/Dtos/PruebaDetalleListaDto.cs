@@ -11,5 +11,6 @@ namespace Aplicacion.Dtos
         public Guid PruebaId { get; set; }
         public string Codigo { get; set; }
         public DateTime FechaCreacion { get; set; }
+        public bool Visibilidad { get; set; }
     }
 }

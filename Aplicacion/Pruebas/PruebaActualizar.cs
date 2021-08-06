@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistencia;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Aplicacion.Pruebas
     {
         public class Ejecuta : IRequest
         {
-            public Guid PruebaId { get; set; }
+            public string PruebaCodigo { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -27,7 +28,7 @@ namespace Aplicacion.Pruebas
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var prueba = await _context.Prueba.FindAsync(request.PruebaId);
+                var prueba = await _context.Prueba.Where(pr => pr.Codigo == request.PruebaCodigo).FirstOrDefaultAsync();
 
                 prueba.Visbilidad = true;
 

@@ -51,7 +51,8 @@ namespace Aplicacion.Evaluaciones
                         {
                             Codigo = pl.Codigo,
                             FechaCreacion = pl.FechaCreacion,
-                            PruebaId = pl.PruebaId
+                            PruebaId = pl.PruebaId,
+                            Visibilidad = pl.Visbilidad
                         })
                     })
                     .FirstOrDefaultAsync();

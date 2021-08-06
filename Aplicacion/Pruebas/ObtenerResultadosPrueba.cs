@@ -16,7 +16,7 @@ namespace Aplicacion.Pruebas
     {
         public class Listar : IRequest<ResultadoPruebaDto>
         {
-            public Guid PruebaId { get; set; }
+            public string PruebaCodigo { get; set; }
         }
 
         public class Manejador : IRequestHandler<Listar, ResultadoPruebaDto>
@@ -29,7 +29,7 @@ namespace Aplicacion.Pruebas
             public async Task<ResultadoPruebaDto> Handle(Listar request, CancellationToken cancellationToken)
             {
                 var pruebasResultado = await _context.Prueba // falta agregar la evidencia!!!
-                    .Where(x => x.PruebaId == request.PruebaId)
+                    .Where(x => x.Codigo == request.PruebaCodigo)
                     .Select(pr => new ResultadoPruebaDto
                     {
                         RequerimientosResultado = pr.EvidenciaRequerimientoLink.Select(er => new ObtenerListaRequerimientoResultadoDto
@@ -112,7 +112,7 @@ namespace Aplicacion.Pruebas
                     }
                 }
 
-                var pruebaGuardar = await _context.Prueba.FindAsync(request.PruebaId);
+                var pruebaGuardar = await _context.Prueba.Where(pr => pr.Codigo == request.PruebaCodigo).FirstOrDefaultAsync();
 
                 pruebaGuardar.PorcentajeCumplimiento = (decimal)pruebasResultado.PorcentajeCumplimientoTotal;
 

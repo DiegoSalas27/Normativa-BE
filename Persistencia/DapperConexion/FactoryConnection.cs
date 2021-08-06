@@ -40,6 +40,8 @@ namespace Persistencia.DapperConexion
             {
                 _connection.Open();
             }
+
+            Console.WriteLine(_connection.ConnectionString, _connection.State);
             return _connection;
         }
     }
