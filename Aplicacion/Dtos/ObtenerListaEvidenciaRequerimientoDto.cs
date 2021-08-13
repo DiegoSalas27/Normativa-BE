@@ -15,9 +15,13 @@ namespace Aplicacion.Dtos
         public Guid RequerimientoId { get; set; }
         public string CriterioDescripcion { get; set; }
         public Guid PruebaId { get; set; }
+        public decimal PruebaPorcentajeCumplimiento { get; set; }
         public string Justificacion { get; set; }
         [Column(TypeName = "decimal(18, 4) null")]
         public decimal? RespuestaItem { get; set; }
         public string? Recomendacion { get; set; }
+        public Guid TratamientoId { get; set; }
+        public string TratamientoCodigo { get; set; }
+        public bool AccionMigitagcion { get; set; }
     }
 }

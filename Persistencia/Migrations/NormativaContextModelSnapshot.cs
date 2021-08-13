@@ -164,6 +164,9 @@ namespace Persistencia.Migrations
                     b.Property<Guid>("PruebaId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AccionMitigacionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Justificacion")
                         .HasColumnType("nvarchar(max)");
 
@@ -174,6 +177,9 @@ namespace Persistencia.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.HasKey("EvidenciaId", "RequerimientoId", "PruebaId");
+
+                    b.HasIndex("AccionMitigacionId")
+                        .IsUnique();
 
                     b.HasIndex("PruebaId");
 
@@ -311,6 +317,9 @@ namespace Persistencia.Migrations
                     b.Property<Guid>("TratamientoId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Codigo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("EvaluacionId")
                         .HasColumnType("uniqueidentifier");
@@ -600,6 +609,12 @@ namespace Persistencia.Migrations
 
             modelBuilder.Entity("Dominio.EvidenciaRequerimiento", b =>
                 {
+                    b.HasOne("Dominio.AccionMitigacion", "AccionMitigacion")
+                        .WithOne("EvidenciaRequerimiento")
+                        .HasForeignKey("Dominio.EvidenciaRequerimiento", "AccionMitigacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Dominio.Evidencia", "Evidencia")
                         .WithMany("RequerimientoEvaluacionLink")
                         .HasForeignKey("EvidenciaId")
@@ -617,6 +632,8 @@ namespace Persistencia.Migrations
                         .HasForeignKey("RequerimientoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AccionMitigacion");
 
                     b.Navigation("Evidencia");
 
@@ -740,6 +757,11 @@ namespace Persistencia.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Dominio.AccionMitigacion", b =>
+                {
+                    b.Navigation("EvidenciaRequerimiento");
                 });
 
             modelBuilder.Entity("Dominio.Criterio", b =>

@@ -1,4 +1,5 @@
 ﻿using Aplicacion.Dtos;
+using Aplicacion.EvidenciaRequerimientos;
 using Aplicacion.Pruebas;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,14 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ObtenerResultadosPrueba.Listar { PruebaCodigo = pruebaCodigo });
         }
 
+        [HttpGet("{pruebaCodigo}/{porcentajeDeseado}")]
+        public async Task<ActionResult<List<ObtenerListaEvidenciaRequerimientoDto>>> ObtenerResultadosDeOptimizacion(string pruebaCodigo, decimal porcentajeDeseado)
+        {
+            var response = await Mediator.Send(new ObtenerResultadosPrueba.Listar { PruebaCodigo = pruebaCodigo });
+            var ids = await Mediator.Send(new OptimizationRequest.Listar { PorcentajeDeseado = porcentajeDeseado, Response = response });
+            return await Mediator.Send(new ConsultaLista.Listar { PruebaCodigo = pruebaCodigo, Ids = ids });
+        }
+
         [HttpPut("activar/{pruebaCodigo}")]
         public async Task<ActionResult<Unit>> ActualizarPrueba(string pruebaCodigo)
         {
@@ -30,7 +39,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Nuevo.Ejecuta>> RegistrarPrueba(Nuevo.Ejecuta parametros)
+        public async Task<ActionResult<Aplicacion.Pruebas.Nuevo.Ejecuta>> RegistrarPrueba(Aplicacion.Pruebas.Nuevo.Ejecuta parametros)
         {
             return await Mediator.Send(parametros);
         }

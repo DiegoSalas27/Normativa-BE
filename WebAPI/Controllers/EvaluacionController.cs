@@ -24,6 +24,14 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ObtenerEvaluacion.Ejecuta { Codigo = evaluacionCodigo });
         }
 
+        [HttpGet("lista")]
+        public async Task<ActionResult<List<ObtenerEvaluacionesDto>>> Listar([FromQuery(Name = "filter")] string filter)
+        {
+            if (filter == null)
+                filter = "";
+            return await Mediator.Send(new Consulta.Listar { QueryLike = filter });
+        }
+
         [HttpPut("{evaluacionId}")]
         public async Task<ActionResult<Unit>> ActualizarEvaluacion(Guid evaluacionId, EvaluacionActualizar.Ejecuta parametros)
         {

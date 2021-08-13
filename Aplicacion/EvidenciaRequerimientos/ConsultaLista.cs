@@ -17,6 +17,7 @@ namespace Aplicacion.EvidenciaRequerimientos
         public class Listar : IRequest<List<ObtenerListaEvidenciaRequerimientoDto>> 
         { 
             public string PruebaCodigo { get; set; }
+            public List<Guid>? Ids { get; set; }
         }
 
         public class Manejador : IRequestHandler<Listar, List<ObtenerListaEvidenciaRequerimientoDto>>
@@ -28,13 +29,14 @@ namespace Aplicacion.EvidenciaRequerimientos
             }
             public async Task<List<ObtenerListaEvidenciaRequerimientoDto>> Handle(Listar request, CancellationToken cancellationToken)
             {
-                var countEvidenciaRequerimiento = await _context.EvidenciaRequerimiento
+                var evidenciasRequerimiento = await _context.EvidenciaRequerimiento
                     .Where(evR => evR.Prueba.Codigo == request.PruebaCodigo)
                     .Select(evR => new ObtenerListaEvidenciaRequerimientoDto
                     {
                         EvidenciaId = evR.EvidenciaId,
                         Justificacion = evR.Justificacion,
                         PruebaId = evR.PruebaId,
+                        PruebaPorcentajeCumplimiento = evR.Prueba.PorcentajeCumplimiento,
                         Recomendacion = evR.Recomendacion,
                         RequerimientoId = evR.RequerimientoId,
                         CriterioDescripcion = evR.Requerimiento.Criterio.Descripcion,
@@ -44,11 +46,19 @@ namespace Aplicacion.EvidenciaRequerimientos
                             Adjunto = evR.Evidencia.Adjunto,
                             EvidenciaId = evR.Evidencia.EvidenciaId,
                             Nombre = evR.Evidencia.Nombre
-                        }
+                        },
+                        TratamientoId = evR.Prueba.Evaluacion.Tratamiento.TratamientoId,
+                        TratamientoCodigo = evR.Prueba.Evaluacion.Tratamiento.Codigo,
+                        AccionMigitagcion = evR.AccionMitigacionId != null ? true : false,
                     })
                     .ToListAsync();
 
-                return countEvidenciaRequerimiento;
+                if (request.Ids != null)
+                {
+                    evidenciasRequerimiento = evidenciasRequerimiento.Where(evR => request.Ids.Contains(evR.RequerimientoId)).ToList();
+                }
+
+                return evidenciasRequerimiento;
             }
         }
     }

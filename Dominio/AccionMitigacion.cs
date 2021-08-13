@@ -14,5 +14,6 @@ namespace Dominio
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         public Tratamiento Tratamiento { get; set; }
+        public EvidenciaRequerimiento EvidenciaRequerimiento { get; set; }
     }
 }

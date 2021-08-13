@@ -13,6 +13,7 @@ namespace Dominio
         public Guid EvaluacionId { get; set; }
         public Guid UsuarioId { get; set; }
         public string Nombre { get; set; }
+        public string Codigo { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         [Column(TypeName = "decimal(18, 4)")]

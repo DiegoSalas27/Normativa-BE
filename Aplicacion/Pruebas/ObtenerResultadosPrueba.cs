@@ -6,9 +6,11 @@ using Persistencia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Aplicacion.Pruebas
 {
@@ -117,7 +119,6 @@ namespace Aplicacion.Pruebas
                 pruebaGuardar.PorcentajeCumplimiento = (decimal)pruebasResultado.PorcentajeCumplimientoTotal;
 
                 var valor = await _context.SaveChangesAsync();
-
 
                 return pruebasResultado;
             }

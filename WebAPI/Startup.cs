@@ -98,7 +98,7 @@ namespace Normativa
             services.AddScoped<IJwtGenerador, JwtGenerador>();
             services.AddScoped<IUsuarioSesion, UsuarioSesion>();
             services.AddScoped<IPaginacion, PaginacionRepositorio>();
-            services.AddAutoMapper(typeof(Consulta.Manejador));
+            services.AddAutoMapper(typeof(Aplicacion.ListaVerificaciones.Consulta.Manejador));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,9 +120,19 @@ namespace Normativa
 
             app.UseAuthorization();
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapFallbackToController("Index", "Home");
             });
         }
     }
