@@ -120,19 +120,9 @@ namespace Normativa
 
             app.UseAuthorization();
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}"
-                );
-
-                endpoints.MapFallbackToController("Index", "Home");
             });
         }
     }
