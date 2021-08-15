@@ -22,6 +22,7 @@ namespace Aplicacion.EvidenciaRequerimientos
             public Guid TratamientoId { get; set; }
             public Guid AccionMitigacionId { get; set; }
             public string Descripcion { get; set; }
+            public bool Estado { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -54,7 +55,8 @@ namespace Aplicacion.EvidenciaRequerimientos
                     {
                         AccionMitigacionId = request.AccionMitigacionId,
                         Descripcion = request.Descripcion,
-                        TratamientoId = request.TratamientoId
+                        TratamientoId = request.TratamientoId,
+                        Estado = request.Estado
                     };
 
                     evidenciaRequerimientoExists.AccionMitigacionId = request.AccionMitigacionId;

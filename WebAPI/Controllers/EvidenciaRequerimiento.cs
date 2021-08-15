@@ -17,6 +17,11 @@ namespace WebAPI.Controllers
         { 
             return await Mediator.Send(new ConsultaLista.Listar { PruebaCodigo = pruebaCodigo });
         }
+        [HttpGet("accion-mitigacion/{accionMitigacionId}")]
+        public async Task<ActionResult<ObtenerEvidenciaRequerimientoAccionMitigacionDto>> ObtenerEvidenciaRequerimientoAccionMitigacion(Guid accionMitigacionId)
+        {
+            return await Mediator.Send(new Consulta.Listar { AccionMitigacionId = accionMitigacionId });
+        }
         [HttpPost]
         public async Task<ActionResult<ObtenerEvidenciaDto>> Crear(Nuevo.Ejecuta parametros)
         {
@@ -36,3 +41,4 @@ namespace WebAPI.Controllers
         }
     }
 }
+

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistencia;
 
 namespace Persistencia.Migrations
 {
     [DbContext(typeof(NormativaContext))]
-    partial class NormativaContextModelSnapshot : ModelSnapshot
+    [Migration("20210814163358_AddedEstadoToMitigacion")]
+    partial class AddedEstadoToMitigacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,18 +55,13 @@ namespace Persistencia.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AccionMitigacionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("TratamientoId")
+                    b.Property<Guid>("TratamientoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ComentarioId");
-
-                    b.HasIndex("AccionMitigacionId");
 
                     b.HasIndex("TratamientoId");
 
@@ -172,7 +169,7 @@ namespace Persistencia.Migrations
                     b.Property<Guid>("PruebaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AccionMitigacionId")
+                    b.Property<Guid>("AccionMitigacionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Justificacion")
@@ -187,8 +184,7 @@ namespace Persistencia.Migrations
                     b.HasKey("EvidenciaId", "RequerimientoId", "PruebaId");
 
                     b.HasIndex("AccionMitigacionId")
-                        .IsUnique()
-                        .HasFilter("[AccionMitigacionId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("PruebaId");
 
@@ -588,17 +584,13 @@ namespace Persistencia.Migrations
 
             modelBuilder.Entity("Dominio.Comentario", b =>
                 {
-                    b.HasOne("Dominio.AccionMitigacion", "AccionMitigacion")
+                    b.HasOne("Dominio.Tratamiento", "Tratamiento")
                         .WithMany("ComentarioLista")
-                        .HasForeignKey("AccionMitigacionId")
+                        .HasForeignKey("TratamientoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Dominio.Tratamiento", null)
-                        .WithMany("ComentarioLista")
-                        .HasForeignKey("TratamientoId");
-
-                    b.Navigation("AccionMitigacion");
+                    b.Navigation("Tratamiento");
                 });
 
             modelBuilder.Entity("Dominio.Evaluacion", b =>
@@ -624,7 +616,9 @@ namespace Persistencia.Migrations
                 {
                     b.HasOne("Dominio.AccionMitigacion", "AccionMitigacion")
                         .WithOne("EvidenciaRequerimiento")
-                        .HasForeignKey("Dominio.EvidenciaRequerimiento", "AccionMitigacionId");
+                        .HasForeignKey("Dominio.EvidenciaRequerimiento", "AccionMitigacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Dominio.Evidencia", "Evidencia")
                         .WithMany("RequerimientoEvaluacionLink")
@@ -772,8 +766,6 @@ namespace Persistencia.Migrations
 
             modelBuilder.Entity("Dominio.AccionMitigacion", b =>
                 {
-                    b.Navigation("ComentarioLista");
-
                     b.Navigation("EvidenciaRequerimiento");
                 });
 

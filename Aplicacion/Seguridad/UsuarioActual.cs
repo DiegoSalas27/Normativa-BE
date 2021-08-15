@@ -32,6 +32,7 @@ namespace Aplicacion.Seguridad
 
                 return new UsuarioData
                 {
+                    Id = usuario.Id,
                     Nombres = usuario.Nombres,
                     Apellidos = usuario.Apellidos,
                     Token = _jwtGenerador.CrearToken(usuario, listaRoles),

@@ -48,7 +48,11 @@ namespace Normativa
         {
             services.AddDbContext<NormativaContext>(opt =>
             {
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure();
+                });
             });
             services.AddOptions();
             services.Configure<ConexionConfiguration>(Configuration.GetSection("ConnectionStrings")); 

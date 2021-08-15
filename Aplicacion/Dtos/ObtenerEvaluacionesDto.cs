@@ -11,6 +11,7 @@ namespace Aplicacion.Dtos
         public Guid EvaluacionId { get; set; }
         public string Codigo { get; set; }
         public string Nombre { get; set; }
+        public bool TieneTratamiento { get; set; }
         public bool Visbilidad { get; set; }
         public IEnumerable<PruebaDetalleListaDto> PruebaList { get; set; }
     }

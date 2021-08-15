@@ -1,4 +1,5 @@
 ﻿using Aplicacion.AccionesMitigacion;
+using Aplicacion.Dtos;
 using Dominio;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace WebAPI.Controllers
     public class AccionMitigacionController : MiControllerBase
     {
         [HttpGet("{tratamientoId}/{codigoPrueba}")]
-        public async Task<ActionResult<List<AccionMitigacion>>> ObtenerAccionesMitigacion(Guid tratamientoId, string codigoPrueba)
+        public async Task<ActionResult<List<AccionMitigacionDto>>> ObtenerAccionesMitigacion(Guid tratamientoId, string codigoPrueba)
         {
             return await Mediator.Send(new ConsultaLista.Listar { TratamientoId = tratamientoId, CodigoPrueba = codigoPrueba });
         }
@@ -22,6 +23,19 @@ namespace WebAPI.Controllers
         {
             parametros.AccionMitigacionId = accionMitigacionId;
             return await Mediator.Send(parametros);
+        }
+
+        [HttpPut("estado/{accionMitigacionId}")]
+        public async Task<ActionResult<Unit>> ActualizarEstado(Guid accionMitigacionId, AccionMitigacionActualizarEstado.Ejecuta parametros)
+        {
+            parametros.AccionMitigacionId = accionMitigacionId;
+            return await Mediator.Send(parametros);
+        }
+
+        [HttpDelete("{accionMitigacionId}")]
+        public async Task<ActionResult<Unit>> Eliminar(Guid accionMitigacionId)
+        { 
+            return await Mediator.Send(new EliminarAccion.Ejecuta { Id = accionMitigacionId });
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Aplicacion.Evaluaciones
                         EvaluacionId = ev.EvaluacionId,
                         Codigo = ev.Codigo,
                         Nombre = ev.Nombre,
+                        TieneTratamiento = ev.Tratamiento != null,
                         Visbilidad = ev.Visbilidad,
                         PruebaList = ev.PruebaList
                         .Where(ev => ev.Visbilidad == true)
@@ -44,7 +45,7 @@ namespace Aplicacion.Evaluaciones
                             Visibilidad = pl.Visbilidad
                         })
                     })
-                    .Where(o => (o.Nombre.Contains(request.QueryLike) || o.Codigo.Contains(request.QueryLike)) && o.Visbilidad == true)
+                    .Where(o => (o.Nombre.Contains(request.QueryLike) || o.Codigo.Contains(request.QueryLike)) && o.Visbilidad == true && o.TieneTratamiento == false)
                     .ToListAsync();
 
                 return evluaciones;

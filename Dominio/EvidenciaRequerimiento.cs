@@ -15,7 +15,7 @@ namespace Dominio
         public Requerimiento Requerimiento { get; set; }
         public Guid PruebaId { get; set; }
         public Prueba Prueba { get; set; }
-        public Guid AccionMitigacionId { get; set; }
+        public Guid? AccionMitigacionId { get; set; }
         public AccionMitigacion AccionMitigacion { get; set; }
         public string Justificacion { get; set; }
         [Column(TypeName = "decimal(18, 4) null")]

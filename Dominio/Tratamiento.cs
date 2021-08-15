@@ -21,6 +21,5 @@ namespace Dominio
         public Evaluacion Evaluacion { get; set; }
         public Usuario Usuario { get; set; }
         public ICollection<AccionMitigacion> AccionMitigacionLista { get; set; }
-        public ICollection<Comentario> ComentarioLista { get; set; }
     }
 }

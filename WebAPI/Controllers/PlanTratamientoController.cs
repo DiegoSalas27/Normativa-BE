@@ -29,5 +29,11 @@ namespace WebAPI.Controllers
         {
             return await Mediator.Send(parametros);
         }
+
+        [HttpPut("{tratamientoCodigo}")]
+        public async Task<ActionResult<Unit>> RegistrarTratamiento(Editar.Ejecuta parametros)
+        {
+            return await Mediator.Send(parametros);
+        }
     }
 }
