@@ -18,6 +18,14 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ConsultaCantidad.Listar());
         }
 
+        [HttpGet("lista")]
+        public async Task<ActionResult<List<ListarTratamientoDto>>> Listar([FromQuery(Name = "filter")] string filter, [FromQuery(Name = "page")] int page)
+        {
+            if (filter == null)
+                filter = "";
+            return await Mediator.Send(new Consulta.Listar { QueryLike = filter, NumeroPagina = page });
+        }
+
         [HttpGet("{tratamientoCodigo}")]
         public async Task<ActionResult<ObtenerTratamientoDto>> ObtenerTratamiento(string tratamientoCodigo)
         {
