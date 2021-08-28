@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<UsuarioData>> Login(Login.Ejecuta parametros)
-        {
+        {   
             return await Mediator.Send(parametros);
         }
 
