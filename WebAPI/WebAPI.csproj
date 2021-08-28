@@ -18,5 +18,9 @@
     <ProjectReference Include="..\Seguridad\Seguridad.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contents\Images\" />
+  </ItemGroup>
+
 
 </Project>

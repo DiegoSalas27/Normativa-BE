@@ -2,9 +2,11 @@
 using Aplicacion.Evaluaciones;
 using Dominio;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +24,15 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<ObtenerEvaluacionDetalle>> ObtenerEvaluacion(string evaluacionCodigo)
         {
             return await Mediator.Send(new ObtenerEvaluacion.Ejecuta { Codigo = evaluacionCodigo });
+        }
+
+        [AllowAnonymous]
+        [HttpGet("informe/{evaluacionCodigo}")]
+        public async Task<ActionResult<MemoryStream>> GenerarInforme(string evaluacionCodigo)
+        {
+            var ms = await Mediator.Send(new GenerarInforme.Ejecuta { Codigo = evaluacionCodigo });
+
+            return new FileStreamResult(ms, "application/pdf");
         }
 
         [HttpGet("lista")]

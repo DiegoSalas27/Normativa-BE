@@ -1,4 +1,5 @@
-﻿using Dominio;
+﻿using Aplicacion.helpers;
+using Dominio;
 using MediatR;
 using Persistencia;
 using System;
@@ -34,7 +35,7 @@ namespace Aplicacion.Comentarios
                 {
                     AccionMitigacionId = request.AccionMitigacionId,
                     Descripcion = request.Descripcion,
-                    FechaCreacion = DateTime.Now,
+                    FechaCreacion = CustomTimeZone.DateNow(),
                     UsuarioId = request.UsuarioId,
                 };
 

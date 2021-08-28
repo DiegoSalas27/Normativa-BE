@@ -47,8 +47,8 @@ namespace Aplicacion.EvidenciaRequerimientos
                             EvidenciaId = evR.Evidencia.EvidenciaId,
                             Nombre = evR.Evidencia.Nombre
                         },
-                        TratamientoId = evR.Prueba.Evaluacion.Tratamiento.TratamientoId,
-                        TratamientoCodigo = evR.Prueba.Evaluacion.Tratamiento.Codigo,
+                        TratamientoId = evR.Prueba.Evaluacion.Tratamiento != null ? evR.Prueba.Evaluacion.Tratamiento.TratamientoId : null,
+                        TratamientoCodigo = evR.Prueba.Evaluacion.Tratamiento != null ? evR.Prueba.Evaluacion.Tratamiento.Codigo : null,
                         AccionMigitagcion = evR.AccionMitigacionId != null ? true : false,
                     })
                     .ToListAsync();

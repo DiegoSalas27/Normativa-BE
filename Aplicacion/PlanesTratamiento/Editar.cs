@@ -16,7 +16,7 @@ namespace Aplicacion.PlanesTratamiento
         {
             public Guid TratamientoId { get; set; }
             public Guid EvaluacionId { get; set; }
-            public Guid UsuarioId { get; set; }
+            public Guid? UsuarioId { get; set; }
             public string Nombre { get; set; }
             public string Codigo { get; set; }
             public List<AccionMitigacion> AccionMitigacionList { get; set; }
@@ -35,7 +35,7 @@ namespace Aplicacion.PlanesTratamiento
                 var tratamiento = await _context.Tratamiento.FindAsync(request.TratamientoId);
 
                 tratamiento.EvaluacionId = request.EvaluacionId;
-                tratamiento.UsuarioId = request.UsuarioId;
+                tratamiento.UsuarioId = request.UsuarioId ?? null;
                 tratamiento.Nombre = request.Nombre;
                 tratamiento.Codigo = request.Codigo;
 

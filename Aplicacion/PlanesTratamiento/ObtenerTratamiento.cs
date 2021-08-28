@@ -39,7 +39,7 @@ namespace Aplicacion.PlanesTratamiento
                         FechaInicio = tr.FechaInicio,
                         FechaFin = tr.FechaFin,
                         Nombre = tr.Nombre,
-                        UsuarioId = tr.UsuarioId,
+                        UsuarioId = tr.UsuarioId ?? null,
                         PorcentajeAvance = tr.PorcentajeAvance,
                         CodigoEvaluacion = tr.Evaluacion.Codigo + "-" + tr.Evaluacion.Nombre,
                         ListaVerificacionCodigo = tr.Evaluacion.ListaVerificacion.Codigo,

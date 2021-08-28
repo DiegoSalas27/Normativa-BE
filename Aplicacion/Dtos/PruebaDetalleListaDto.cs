@@ -12,5 +12,8 @@ namespace Aplicacion.Dtos
         public string Codigo { get; set; }
         public DateTime FechaCreacion { get; set; }
         public bool Visibilidad { get; set; }
+
+        public decimal? PorcentajeCumplimiento { get; set; }
+        public string? NivelDeRiesgo { get; set; }
     }
 }

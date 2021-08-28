@@ -15,7 +15,7 @@ namespace Aplicacion.PlanesTratamiento
         public class Ejecuta : IRequest<Ejecuta>
         {
             public Guid EvaluacionId { get; set; }
-            public Guid UsuarioId { get; set; }
+            public Guid? UsuarioId { get; set; }
             public string Nombre  { get; set; }
             public string Codigo { get; set; }
         }
@@ -35,7 +35,7 @@ namespace Aplicacion.PlanesTratamiento
                     EvaluacionId = request.EvaluacionId,
                     Nombre = request.Nombre,
                     PorcentajeAvance = 0,
-                    UsuarioId = request.UsuarioId,
+                    UsuarioId = request.UsuarioId ?? null,
                     Codigo = request.Codigo
                 };
 

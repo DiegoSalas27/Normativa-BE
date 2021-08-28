@@ -19,6 +19,7 @@ namespace Aplicacion.Dtos
         public string CodigoConcatenadoObra { get; set; }
         public string CodigoObra { get; set; }
         public Guid ObraId { get; set; }
+        public IEnumerable<NivelesRiesgo>? NivelesRiesgos { get; set; }
         public string CodigoListaVerificacion { get; set; }
         public string CodigoConcatenadoListaVerificacion { get; set; }
         public DateTime ListaVerificacionFechaCreacion { get; set; }
