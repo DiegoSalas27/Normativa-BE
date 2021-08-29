@@ -9,8 +9,11 @@ namespace Dominio
     public class Evidencia
     {
         public Guid EvidenciaId { get; set; }
+        public string Codigo { get; set; }
         public string Nombre { get; set; }
         public string Adjunto { get; set; }
+
+        public string AdjuntoURL { get; set; }
         public ICollection<EvidenciaRequerimiento> RequerimientoEvaluacionLink { get; set; }
 
     }

@@ -22,6 +22,7 @@ namespace Aplicacion.EvidenciaRequerimientos
             public Guid RequerimientoId { get; set; }
             public string PruebaCodigo { get; set; }
             public string? EvidenciaNombre { get; set; }
+            public string EvidenciaCodigo { get; set; }
             public string Justificacion { get; set; }
             public decimal? RespuestaItem { get; set; }
         }
@@ -53,27 +54,33 @@ namespace Aplicacion.EvidenciaRequerimientos
                         Adjunto = "",
                         EvidenciaId = _evidenciaId,
                         Nombre = request.EvidenciaNombre,
+                        Codigo = request.EvidenciaCodigo,
                     };
 
                     _context.Evidencia.Add(evidencia);
                 }
-                else
-                {
-                    var evidenciaExits = await _context.Evidencia.FindAsync(request.EvidenciaId);
+                //else
+                //{
+                //    var evidenciaExits = await _context.Evidencia.FindAsync(request.EvidenciaId);
 
-                    if (evidenciaExits != null)
-                    {
-                        evidenciaDto.EvidenciaId = evidenciaExits.EvidenciaId;
-                        evidenciaExits.Nombre = request.EvidenciaNombre;
-                        //evidencia.Adjunto = request.EvidenciaAdjunto;
-                    }
-                }
+                //    if (evidenciaExits != null)
+                //    {
+                //        evidenciaDto.EvidenciaId = evidenciaExits.EvidenciaId;
+                //        evidenciaExits.Nombre = request.EvidenciaNombre;
+                //        //evidencia.Adjunto = request.EvidenciaAdjunto;
+                //    }
+                //}
 
 
                 var Prueba = await _context.Prueba.Where(pr => pr.Codigo == request.PruebaCodigo).FirstOrDefaultAsync();
 
                 var evidenciaRequerimientoExists = await _context.EvidenciaRequerimiento
                     .Where(evR => evR.EvidenciaId == _evidenciaId && evR.RequerimientoId == request.RequerimientoId
+                    && evR.PruebaId == Prueba.PruebaId)
+                    .FirstOrDefaultAsync();
+
+                var evidenciaRequerimientoChangedEvidenciaExists = await _context.EvidenciaRequerimiento
+                    .Where(evR => evR.EvidenciaId != _evidenciaId && evR.RequerimientoId == request.RequerimientoId
                     && evR.PruebaId == Prueba.PruebaId)
                     .FirstOrDefaultAsync();
 
@@ -94,6 +101,11 @@ namespace Aplicacion.EvidenciaRequerimientos
                 {
                     evidenciaRequerimientoExists.Justificacion = request.Justificacion;
                     evidenciaRequerimientoExists.RespuestaItem = request.RespuestaItem;
+                }
+
+                if (evidenciaRequerimientoChangedEvidenciaExists != null)
+                {
+                    _context.Remove(evidenciaRequerimientoChangedEvidenciaExists);
                 }
 
                 var valor = await _context.SaveChangesAsync();

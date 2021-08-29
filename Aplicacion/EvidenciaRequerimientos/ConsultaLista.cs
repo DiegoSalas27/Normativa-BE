@@ -44,8 +44,10 @@ namespace Aplicacion.EvidenciaRequerimientos
                         Evidencia = new ObtenerEvidenciaDto 
                         { 
                             Adjunto = evR.Evidencia.Adjunto,
+                            AdjuntoURL = evR.Evidencia.AdjuntoURL,
                             EvidenciaId = evR.Evidencia.EvidenciaId,
-                            Nombre = evR.Evidencia.Nombre
+                            Nombre = evR.Evidencia.Nombre,
+                            Codigo = evR.Evidencia.Codigo
                         },
                         TratamientoId = evR.Prueba.Evaluacion.Tratamiento != null ? evR.Prueba.Evaluacion.Tratamiento.TratamientoId : null,
                         TratamientoCodigo = evR.Prueba.Evaluacion.Tratamiento != null ? evR.Prueba.Evaluacion.Tratamiento.Codigo : null,

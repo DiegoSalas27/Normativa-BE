@@ -1,8 +1,10 @@
 ﻿using Aplicacion.Evidencias;
 using Aplicacion.helpers;
+using Dominio;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 namespace WebAPI.Controllers
@@ -10,7 +12,7 @@ namespace WebAPI.Controllers
     public class EvidenciaController : MiControllerBase
     {
         [HttpPost("[action]/{evidenciaId}")]
-        public async Task<ActionResult<Unit>> Upload(Guid evidenciaId)
+        public async Task<ActionResult<Evidencia>> Upload(Guid evidenciaId)
         {
             var form = Request.Form;
             if (form.Files.Count > 0) 
@@ -23,9 +25,15 @@ namespace WebAPI.Controllers
                 var blobStorage = new BlobStorage();
                 await blobStorage.Upload(stream, filePath);
 
-                return await Mediator.Send(new Editar.Ejecuta { EvidenciaId = evidenciaId, NombreAdjunto = fileNameStore });
+                return await Mediator.Send(new Editar.Ejecuta { EvidenciaId = evidenciaId, NombreAdjunto = fileName + extension, AdjuntoURL = fileNameStore });
             }
             return null;
+        }
+
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> ObtenerNumeroEvidenciasCount()
+        {
+            return await Mediator.Send(new ConsultaCantidad.Listar());
         }
 
         [HttpGet("[action]/{filePath}")]
@@ -35,6 +43,12 @@ namespace WebAPI.Controllers
             Response.Headers.Add("Content-Disposition", "attachment; filename=" + filePath);
 
             return File(file, "application/octet-stream");
+        }
+
+        [HttpGet("lista")]
+        public async Task<ActionResult<List<Evidencia>>> Listar([FromQuery(Name = "filter")] string filter)
+        {
+            return await Mediator.Send(new EvidenciaLista.Ejecuta { QueryLike = filter });
         }
     }
 }
