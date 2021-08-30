@@ -45,7 +45,7 @@ namespace Aplicacion.EvidenciaRequerimientos
                     _evidenciaId = (Guid)request.EvidenciaId;
                 }
 
-                if (request.EvidenciaId == null)
+                if (request.EvidenciaId == null && request.EvidenciaNombre != "")
                 {
                     evidenciaDto.EvidenciaId = _evidenciaId;
 
