@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Aplicacion.Contratos;
@@ -122,13 +123,17 @@ namespace Aplicacion.Seguridad
                     EspecialidadId = especialidad?.Id,
                 };
 
+                Regex sWhitespace = new Regex(@"\s+");
+
+                usuario.UserName = Regex.Replace(usuario.UserName, @"\s+", "");
+
                 // LLamar a metodo para insertar usuario
                 var result = await _userManager.CreateAsync(usuario, request.Password);
 
                 if (result.Succeeded)
                 {
 
-                    var userCreated = await _userManager.FindByNameAsync(request.Nombres + request.Apellidos);
+                    var userCreated = await _userManager.FindByNameAsync(Regex.Replace(usuario.UserName, @"\s+", ""));
 
                     var user = await _userManager.AddToRoleAsync(userCreated, request.Rol);
 
