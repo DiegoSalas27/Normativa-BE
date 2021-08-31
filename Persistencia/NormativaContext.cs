@@ -15,7 +15,7 @@ namespace Persistencia
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<EvidenciaRequerimiento>()
-                .HasKey(er => new { er.EvidenciaId, er.RequerimientoId, er.PruebaId });
+                .HasKey(er => new { er.RequerimientoId, er.PruebaId });
             modelBuilder.Entity<ListaVerificacionNivelesRiesgo>()
                 .HasKey(ln => new { ln.ListaVerificacionId, ln.NivelesRiesgoId });
             modelBuilder.Entity<Tratamiento>()

@@ -33,7 +33,7 @@ namespace Aplicacion.EvidenciaRequerimientos
                     .Where(evR => evR.Prueba.Codigo == request.PruebaCodigo)
                     .Select(evR => new ObtenerListaEvidenciaRequerimientoDto
                     {
-                        EvidenciaId = evR.EvidenciaId,
+                        EvidenciaId = evR.EvidenciaId ?? null,
                         Justificacion = evR.Justificacion,
                         PruebaId = evR.PruebaId,
                         PruebaPorcentajeCumplimiento = evR.Prueba.PorcentajeCumplimiento,

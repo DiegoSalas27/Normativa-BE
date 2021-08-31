@@ -10,7 +10,7 @@ namespace Aplicacion.Dtos
 {
     public class ObtenerListaEvidenciaRequerimientoDto
     {
-        public Guid EvidenciaId { get; set; }
+        public Guid? EvidenciaId { get; set; }
         public ObtenerEvidenciaDto Evidencia { get; set; }
         public Guid RequerimientoId { get; set; }
         public string CriterioDescripcion { get; set; }

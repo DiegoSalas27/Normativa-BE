@@ -9,7 +9,7 @@ namespace Dominio
 {
     public class EvidenciaRequerimiento
     {
-        public Guid EvidenciaId { get; set; }
+        public Guid? EvidenciaId { get; set; }
         public Evidencia Evidencia { get; set; }
         public Guid RequerimientoId { get; set; }
         public Requerimiento Requerimiento { get; set; }

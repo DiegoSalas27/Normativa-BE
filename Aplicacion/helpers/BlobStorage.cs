@@ -33,7 +33,7 @@ namespace Aplicacion.helpers
             {
                 cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filePath);
 
-                await Task.Run(async () => await cloudBlockBlob.UploadFromStreamAsync(stream));
+                await Task.Run(() => cloudBlockBlob.UploadFromStreamAsync(stream));
 
                 Console.WriteLine("Upload done!");
 

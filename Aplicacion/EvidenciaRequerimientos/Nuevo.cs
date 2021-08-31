@@ -36,7 +36,7 @@ namespace Aplicacion.EvidenciaRequerimientos
             }
             public async Task<ObtenerEvidenciaDto> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                Guid _evidenciaId = Guid.NewGuid();
+                Guid? _evidenciaId = (request.EvidenciaNombre != "" && request.EvidenciaNombre != null) ? Guid.NewGuid() : null;
 
                 var evidenciaDto = new ObtenerEvidenciaDto();
 
@@ -45,14 +45,14 @@ namespace Aplicacion.EvidenciaRequerimientos
                     _evidenciaId = (Guid)request.EvidenciaId;
                 }
 
-                if (request.EvidenciaId == null && request.EvidenciaNombre != "")
+                if (request.EvidenciaId == null && request.EvidenciaNombre != "" && request.EvidenciaNombre != null)
                 {
                     evidenciaDto.EvidenciaId = _evidenciaId;
 
                     var evidencia = new Evidencia
                     {
                         Adjunto = "",
-                        EvidenciaId = _evidenciaId,
+                        EvidenciaId = (Guid)_evidenciaId,
                         Nombre = request.EvidenciaNombre,
                         Codigo = request.EvidenciaCodigo,
                     };
@@ -75,14 +75,14 @@ namespace Aplicacion.EvidenciaRequerimientos
                 var Prueba = await _context.Prueba.Where(pr => pr.Codigo == request.PruebaCodigo).FirstOrDefaultAsync();
 
                 var evidenciaRequerimientoExists = await _context.EvidenciaRequerimiento
-                    .Where(evR => evR.EvidenciaId == _evidenciaId && evR.RequerimientoId == request.RequerimientoId
+                    .Where(evR => evR.RequerimientoId == request.RequerimientoId
                     && evR.PruebaId == Prueba.PruebaId)
                     .FirstOrDefaultAsync();
 
-                var evidenciaRequerimientoChangedEvidenciaExists = await _context.EvidenciaRequerimiento
-                    .Where(evR => evR.EvidenciaId != _evidenciaId && evR.RequerimientoId == request.RequerimientoId
-                    && evR.PruebaId == Prueba.PruebaId)
-                    .FirstOrDefaultAsync();
+                //var evidenciaRequerimientoChangedEvidenciaExists = await _context.EvidenciaRequerimiento
+                //    .Where(evR => evR.EvidenciaId != _evidenciaId && evR.RequerimientoId == request.RequerimientoId
+                //    && evR.PruebaId == Prueba.PruebaId)
+                //    .FirstOrDefaultAsync();
 
                 if (evidenciaRequerimientoExists == null)
                 {
@@ -99,14 +99,15 @@ namespace Aplicacion.EvidenciaRequerimientos
                 }
                 else
                 {
+                    evidenciaRequerimientoExists.EvidenciaId = _evidenciaId;
                     evidenciaRequerimientoExists.Justificacion = request.Justificacion;
                     evidenciaRequerimientoExists.RespuestaItem = request.RespuestaItem;
                 }
 
-                if (evidenciaRequerimientoChangedEvidenciaExists != null)
-                {
-                    _context.Remove(evidenciaRequerimientoChangedEvidenciaExists);
-                }
+                //if (evidenciaRequerimientoChangedEvidenciaExists != null)
+                //{
+                //    _context.Remove(evidenciaRequerimientoChangedEvidenciaExists);
+                //}
 
                 var valor = await _context.SaveChangesAsync();
                 if (valor >= 0)
