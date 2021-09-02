@@ -35,7 +35,7 @@ namespace Aplicacion.EvidenciaRequerimientos
                     .Select(evR => new ObtenerEvidenciaRequerimientoAccionMitigacionDto
                     {
                         Justificacion = evR.Justificacion,
-                        Recomendacion = evR.Recomendacion,
+                        Recomendacion = evR.Requerimiento.Recomendacion,
                         RequerimientoDescripcion = evR.Requerimiento.Descripcion,
                         CriterioDescripcion = evR.Requerimiento.Criterio.Descripcion,
                         RespuestaItem = evR.RespuestaItem,

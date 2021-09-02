@@ -16,8 +16,6 @@ namespace Persistencia
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<EvidenciaRequerimiento>()
                 .HasKey(er => new { er.RequerimientoId, er.PruebaId });
-            modelBuilder.Entity<ListaVerificacionNivelesRiesgo>()
-                .HasKey(ln => new { ln.ListaVerificacionId, ln.NivelesRiesgoId });
             modelBuilder.Entity<Tratamiento>()
                 .HasOne(n => n.Usuario)
                 .WithMany(b => b.TratamientoList);
@@ -34,7 +32,6 @@ namespace Persistencia
         public DbSet<Evidencia> Evidencia { get; set; }
         public DbSet<EvidenciaRequerimiento> EvidenciaRequerimiento { get; set; }
         public DbSet<ListaVerificacion> ListaVerificacion { get; set; }
-        public DbSet<ListaVerificacionNivelesRiesgo> ListaVerificacionNivelesRiesgo { get; set; }
         public DbSet<NivelesRiesgo> NivelesRiesgo { get; set; }
         public DbSet<Obra> Obra { get; set; }
         public DbSet<Prueba> Prueba { get; set; }

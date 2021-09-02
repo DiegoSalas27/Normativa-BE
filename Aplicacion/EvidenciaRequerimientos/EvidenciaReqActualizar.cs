@@ -15,7 +15,6 @@ namespace Aplicacion.EvidenciaRequerimientos
     {
         public class Ejecuta : IRequest
         {
-            public Guid EvidenciaId { get; set; }
             public Guid PruebaId { get; set; }
             public Guid RequerimientoId { get; set; }
 
@@ -37,7 +36,7 @@ namespace Aplicacion.EvidenciaRequerimientos
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
                 var evidenciaRequerimientoExists = await _context.EvidenciaRequerimiento
-                   .Where(evR => evR.EvidenciaId == request.EvidenciaId && evR.RequerimientoId == request.RequerimientoId
+                   .Where(evR => evR.RequerimientoId == request.RequerimientoId
                    && evR.PruebaId == request.PruebaId)
                    .FirstOrDefaultAsync();
 

@@ -12,6 +12,7 @@ namespace Dominio
         public Guid ListaVerificacionId { get; set; }
         public Guid CriterioId { get; set; }
         public string Descripcion { get; set; }
+        public string Recomendacion { get; set; }
         public ListaVerificacion VerificacionLista { get; set; }
         public Criterio Criterio { get; set; }
         public ICollection<EvidenciaRequerimiento> EvidenciaPruebaLink { get; set; }

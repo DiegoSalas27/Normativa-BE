@@ -63,11 +63,11 @@ namespace Aplicacion.Evaluaciones
                         CodigoConcatenadoObra = ev.Obra.Codigo + '-' + ev.Obra.Nombre,
                         CodigoObra = ev.Obra.Codigo,
                         ObraId = ev.ObraId,
-                        NivelesRiesgos = ev.ListaVerificacion.NivelesRiesgosLink.Select(er => new NivelesRiesgo
+                        NivelesRiesgos = ev.ListaVerificacion.NivelesRiesgosList.Select(nr => new NivelesRiesgo
                         {
-                            Nombre = er.NivelesRiesgo.Nombre,
-                            ExtMinimo = er.NivelesRiesgo.ExtMinimo,
-                            ExtMaximo = er.NivelesRiesgo.ExtMaximo,
+                            Nombre = nr.Nombre,
+                            ExtMinimo = nr.ExtMinimo,
+                            ExtMaximo = nr.ExtMaximo,
                         }),
                         PruebaList = ev.PruebaList.Select(pl => new PruebaDetalleListaDto
                         {

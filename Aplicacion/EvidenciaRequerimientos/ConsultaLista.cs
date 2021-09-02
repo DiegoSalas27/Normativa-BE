@@ -37,7 +37,7 @@ namespace Aplicacion.EvidenciaRequerimientos
                         Justificacion = evR.Justificacion,
                         PruebaId = evR.PruebaId,
                         PruebaPorcentajeCumplimiento = evR.Prueba.PorcentajeCumplimiento,
-                        Recomendacion = evR.Recomendacion,
+                        Recomendacion = evR.Requerimiento.Recomendacion,
                         RequerimientoId = evR.RequerimientoId,
                         CriterioDescripcion = evR.Requerimiento.Criterio.Descripcion,
                         RespuestaItem = evR.RespuestaItem,

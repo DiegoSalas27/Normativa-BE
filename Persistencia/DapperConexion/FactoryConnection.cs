@@ -18,7 +18,6 @@ namespace Persistencia.DapperConexion
 
         public FactoryConnection(IOptions<ConexionConfiguration> configs)
         {
-            Console.WriteLine("Se Instancio FactoryConnection");
             _configs = configs; // injeccion de objeto connection
         }
         public void CloseConnection()
@@ -40,8 +39,6 @@ namespace Persistencia.DapperConexion
             {
                 _connection.Open();
             }
-
-            Console.WriteLine(_connection.ConnectionString, _connection.State);
             return _connection;
         }
     }

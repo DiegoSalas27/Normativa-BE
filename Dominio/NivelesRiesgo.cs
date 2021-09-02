@@ -10,11 +10,12 @@ namespace Dominio
     public class NivelesRiesgo
     {
         public Guid NivelesRiesgoId { get; set; }
+        public Guid? ListaVerificacionId { get; set; }
         public string Nombre { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal ExtMinimo { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal ExtMaximo { get; set; }
-        public ICollection<ListaVerificacionNivelesRiesgo> ListaVerificacionLink { get; set; }
+        public ListaVerificacion ListaVerificacion { get; set; }
     }
 }

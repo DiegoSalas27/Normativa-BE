@@ -12,10 +12,10 @@ namespace Aplicacion.helpers
     public class BlobStorage
     {
         private readonly string storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=normativaresourcestorage;AccountKey=TOH141KEGHLCHLBOMQBjXMdlD4L+8MpCYK2NQTPG+iZqxYgXeJFIIG+Ys73LnkutmK4+C/arCo/aHXjXRC6EqA==;EndpointSuffix=core.windows.net";
-        private CloudStorageAccount storageAccount;
-        private CloudBlobClient cloudBlobClient;
+        private readonly CloudStorageAccount storageAccount;
+        private readonly CloudBlobClient cloudBlobClient;
         private CloudBlockBlob cloudBlockBlob;
-        private CloudBlobContainer cloudBlobContainer;
+        private readonly CloudBlobContainer cloudBlobContainer;
 
         public BlobStorage()
         {

@@ -23,11 +23,9 @@ namespace Aplicacion.ListaVerificaciones
         public class Manejador : IRequestHandler<Listar, List<ObtenerListaVerificacionDto>>
         {
             private readonly NormativaContext _context;
-            private readonly IMapper _mapper;
-            public Manejador(NormativaContext context, IMapper mapper)
+            public Manejador(NormativaContext context)
             {
                 _context = context;
-                _mapper = mapper;
             }
             public async Task<List<ObtenerListaVerificacionDto>> Handle(Listar request, CancellationToken cancellationToken)
             {

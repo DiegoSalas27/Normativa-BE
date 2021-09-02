@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
+using Aplicacion.ManejadorError;
+using System.Net;
 
 namespace Aplicacion.Pruebas
 {
@@ -37,33 +39,41 @@ namespace Aplicacion.Pruebas
             }
             public async Task<List<Guid>> Handle(Listar request, CancellationToken cancellationToken)
             {
-                var responseObtener = request.Response;
-
-                var arrayList = new List<Guid>();
-
-                using (var httpClient = new HttpClient())
+                try
                 {
-                    var serializer = new JsonSerializer()
+                    var responseObtener = request.Response;
+
+                    var arrayList = new List<Guid>();
+
+                    using (var httpClient = new HttpClient())
                     {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    };
-
-                    var json = JObject.FromObject(responseObtener, serializer);
-
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
-
-                    using (var response = await httpClient.PostAsync("https://dry-earth-03574.herokuapp.com/api/enhance/" + request.PorcentajeDeseado, content))
-                    {
-                        string apiResponse = await response.Content.ReadAsStringAsync();
-                        var responseFinal = JsonConvert.DeserializeObject<HerokuResponseDto>(apiResponse);
-                        foreach (var result in responseFinal.objResult)
+                        var serializer = new JsonSerializer()
                         {
-                            arrayList.Add(result.requerimientoId);
+                            ContractResolver = new CamelCasePropertyNamesContractResolver()
+                        };
+
+                        var json = JObject.FromObject(responseObtener, serializer);
+
+                        StringContent content = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
+
+                        using (var response = await httpClient.PostAsync("https://dry-earth-03574.herokuapp.com/api/enhance/" + request.PorcentajeDeseado, content))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var responseFinal = JsonConvert.DeserializeObject<HerokuResponseDto>(apiResponse);
+                            foreach (var result in responseFinal.objResult)
+                            {
+                                arrayList.Add(result.requerimientoId);
+                            }
                         }
                     }
-                }
 
-                return arrayList;
+                    return arrayList;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw new ManejadorExcepcion(HttpStatusCode.BadRequest, new { mensaje = "Por favor intente con otro valor" });
+                }
             }
         }
     }

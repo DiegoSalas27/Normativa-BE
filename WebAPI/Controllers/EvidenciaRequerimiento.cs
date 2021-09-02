@@ -27,14 +27,12 @@ namespace WebAPI.Controllers
         {
             return await Mediator.Send(parametros);
         }
-        [HttpPut("{evidenciaId}/{pruebaId}/{requerimientoId}")]
+        [HttpPut("{pruebaId}/{requerimientoId}")]
         public async Task<ActionResult<Unit>> ActualizarEvidenciaRequerimiento(
-            Guid evidenciaId, 
             Guid pruebaId, 
             Guid requerimientoId,
             EvidenciaReqActualizar.Ejecuta parametros)
         {
-            parametros.EvidenciaId = evidenciaId;
             parametros.PruebaId = pruebaId;
             parametros.RequerimientoId = requerimientoId;
             return await Mediator.Send(parametros);

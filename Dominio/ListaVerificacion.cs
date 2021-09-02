@@ -14,6 +14,6 @@ namespace Dominio
         public DateTime FechaCreacion { get; set; }
         public ICollection<Requerimiento> RequerimientoList { get; set; }
         public ICollection<Evaluacion> EvaluacionList { get; set; }
-        public ICollection<ListaVerificacionNivelesRiesgo> NivelesRiesgosLink { get; set; }
+        public ICollection<NivelesRiesgo> NivelesRiesgosList { get; set; }
     }
 }

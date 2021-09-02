@@ -23,9 +23,10 @@ namespace WebAPI.Controllers
                 string fileNameStore = fileName + "_" + Guid.NewGuid().ToString() + extension;
                 string filePath = "upload/" + fileNameStore;
                 var blobStorage = new BlobStorage();
+                var evidencia = await Mediator.Send(new Editar.Ejecuta { EvidenciaId = evidenciaId, NombreAdjunto = fileName + extension, AdjuntoURL = fileNameStore });
                 await blobStorage.Upload(stream, filePath);
 
-                return await Mediator.Send(new Editar.Ejecuta { EvidenciaId = evidenciaId, NombreAdjunto = fileName + extension, AdjuntoURL = fileNameStore });
+                return evidencia;
             }
             return null;
         }

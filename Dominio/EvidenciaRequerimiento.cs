@@ -20,6 +20,5 @@ namespace Dominio
         public string Justificacion { get; set; }
         [Column(TypeName = "decimal(18, 4) null")]
         public decimal? RespuestaItem { get; set; }
-        public string? Recomendacion { get; set; }
     }
 }

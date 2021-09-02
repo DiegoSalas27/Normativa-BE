@@ -38,11 +38,11 @@ namespace Aplicacion.Pruebas
                         {
                             Descripcion = er.Requerimiento.Descripcion,
                             RequerimientoId = er.RequerimientoId,
-                            NivelesRiesgos = er.Requerimiento.VerificacionLista.NivelesRiesgosLink.Select(er => new NivelesRiesgo
+                            NivelesRiesgos = er.Requerimiento.VerificacionLista.NivelesRiesgosList.Select(nr => new NivelesRiesgo
                             { 
-                                Nombre = er.NivelesRiesgo.Nombre,
-                                ExtMinimo = er.NivelesRiesgo.ExtMinimo,
-                                ExtMaximo = er.NivelesRiesgo.ExtMaximo,
+                                Nombre = nr.Nombre,
+                                ExtMinimo = nr.ExtMinimo,
+                                ExtMaximo = nr.ExtMaximo,
                             }),
                             CriterioResultado = new CriterioResultadoDto
                             {
@@ -52,7 +52,7 @@ namespace Aplicacion.Pruebas
                             EvidenciaPruebaLink = new ObtenerEvidenciaRequerimientoDto
                             {
                                 Justificacion = er.Justificacion,
-                                Recomendacion = er.Recomendacion,
+                                Recomendacion = er.Requerimiento.Recomendacion,
                                 RespuestaItem = er.RespuestaItem,
                             }
                         })
