@@ -16,6 +16,7 @@ namespace Aplicacion.PlanesTratamiento
         {
             public Guid TratamientoId { get; set; }
             public Guid EvaluacionId { get; set; }
+            public Guid? EstadosTratamientoId { get; set; }
             public Guid? UsuarioId { get; set; }
             public string Nombre { get; set; }
             public string Codigo { get; set; }
@@ -34,8 +35,14 @@ namespace Aplicacion.PlanesTratamiento
 
                 var tratamiento = await _context.Tratamiento.FindAsync(request.TratamientoId);
 
+                if (request.EstadosTratamientoId == new Guid("A2398FE0-9F21-4DE7-BA48-0B0B57B31E30"))
+                {
+                    request.UsuarioId = null;
+                }
+
                 tratamiento.EvaluacionId = request.EvaluacionId;
                 tratamiento.UsuarioId = request.UsuarioId ?? null;
+                tratamiento.EstadosTratamientoId = request.EstadosTratamientoId ?? null;
                 tratamiento.Nombre = request.Nombre;
                 tratamiento.Codigo = request.Codigo;
 

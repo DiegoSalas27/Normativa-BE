@@ -9,6 +9,7 @@ namespace Aplicacion.Dtos
     public class ObtenerTratamientoDto
     {
         public Guid TratamientoId { get; set; }
+        public Guid EstadosTratamientoId { get; set; }
         public Guid EvaluacionId { get; set;}
         public string Codigo { get; set;}
         public DateTime? FechaInicio { get; set;}

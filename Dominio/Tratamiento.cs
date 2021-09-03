@@ -12,6 +12,7 @@ namespace Dominio
         public Guid TratamientoId { get; set; }
         public Guid EvaluacionId { get; set; }
         public Guid? UsuarioId { get; set; }
+        public Guid? EstadosTratamientoId { get; set; }
         public string Nombre { get; set; }
         public string Codigo { get; set; }
         public DateTime? FechaInicio { get; set; }
@@ -20,6 +21,7 @@ namespace Dominio
         public decimal PorcentajeAvance { get; set; }
         public Evaluacion Evaluacion { get; set; }
         public Usuario Usuario { get; set; }
+        public EstadosTratamiento EstadosTratamiento { get; set; }
         public ICollection<AccionMitigacion> AccionMitigacionLista { get; set; }
     }
 }

@@ -34,6 +34,7 @@ namespace Aplicacion.PlanesTratamiento
                     .Select(tr => new ObtenerTratamientoDto
                     {
                         TratamientoId = tr.TratamientoId,
+                        EstadosTratamientoId = (Guid)tr.EstadosTratamientoId,
                         EvaluacionId = tr.EvaluacionId,
                         Codigo = tr.Codigo,
                         FechaInicio = tr.FechaInicio,

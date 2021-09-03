@@ -37,5 +37,6 @@ namespace Persistencia
         public DbSet<Prueba> Prueba { get; set; }
         public DbSet<Requerimiento> Requerimiento { get; set; }
         public DbSet<Tratamiento> Tratamiento { get; set; }
+        public DbSet<EstadosTratamiento> EstadosTratamiento { get; set; }
     }
 }
