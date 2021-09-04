@@ -38,7 +38,6 @@ namespace Aplicacion.EstadoTratamiento
                             EstadosTratamientoId = e.EstadosTratamientoId,
                             Nombre = e.Nombre,
                         })
-                        .Where(o => o.Nombre == "Asignado" || o.Nombre == "Sin asignar" || o.Nombre == "Solucionado" || o.Nombre == "Cancelado")
                         .ToListAsync();
                 }
 

@@ -42,7 +42,7 @@ namespace Aplicacion.PlanesTratamiento
                         UsuarioId = tr.UsuarioId,
                         Usuario = tr.Usuario
                     })
-                    .Where(tr => usuarioIds.Contains(tr.UsuarioId))
+                    .Where(tr => usuarioIds.Contains(tr.UsuarioId) || tr.UsuarioId == null)
                     .ToListAsync();
 
                 List<EstadoUsuariosDto> estadoUsuarios = new List<EstadoUsuariosDto>();
@@ -101,6 +101,11 @@ namespace Aplicacion.PlanesTratamiento
                 var estadoUsuarioAsignado = estadoUsuarios.Find(eu => eu.Name == "Asignado");
                 estadoUsuarioAsignado.Data.Add(null);
 
+                int countSinAsignar = listasTratamientosStats.Where(lt => lt.EstadosTratamiento.Nombre == "Sin asignar").Count();
+
+                var estadoUsuarioSinAsignar = estadoUsuarios.Find(eu => eu.Name == "Sin asignar");
+                estadoUsuarioSinAsignar.Data.Add(countSinAsignar > 0 ? countSinAsignar : null);
+
 
                 foreach (var usuario in usuarios)
                 {
@@ -143,12 +148,10 @@ namespace Aplicacion.PlanesTratamiento
 
                     estadoUsuarioAsignado = estadoUsuarios.Find(eu => eu.Name == "Asignado");
                     estadoUsuarioAsignado.Data.Add(countAsignado > 0 ? countAsignado : null);
+
+                    estadoUsuarioSinAsignar = estadoUsuarios.Find(eu => eu.Name == "Sin asignar");
+                    estadoUsuarioSinAsignar.Data.Add(null);
                 }
-
-                int countSinAsignar = listasTratamientosStats.Where(lt => lt.EstadosTratamiento.Nombre == "Sin asignar").Count();
-
-                var estadoUsuarioSinAsignar = estadoUsuarios.Find(eu => eu.Name == "Sin asignar");
-                estadoUsuarioSinAsignar.Data.Add(countSinAsignar > 0 ? countSinAsignar : null);
 
 
                 var response = new StatisticsTratamientoResultAnalistasDto

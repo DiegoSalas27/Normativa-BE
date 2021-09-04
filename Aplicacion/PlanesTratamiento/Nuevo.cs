@@ -15,6 +15,7 @@ namespace Aplicacion.PlanesTratamiento
         public class Ejecuta : IRequest<Ejecuta>
         {
             public Guid EvaluacionId { get; set; }
+            public Guid EstadosTratamientoId { get; set; }
             public string UsuarioId { get; set; }
             public string Nombre  { get; set; }
             public string Codigo { get; set; }
@@ -32,7 +33,7 @@ namespace Aplicacion.PlanesTratamiento
                 var tratamiento = new Tratamiento
                 {
                     EvaluacionId = request.EvaluacionId,
-                    EstadosTratamientoId = new Guid("A2398FE0-9F21-4DE7-BA48-0B0B57B31E30"),
+                    EstadosTratamientoId = request.EstadosTratamientoId != null ? request.EstadosTratamientoId : new Guid("A2398FE0-9F21-4DE7-BA48-0B0B57B31E30"),
                     Nombre = request.Nombre,
                     PorcentajeAvance = 0,
                     UsuarioId = request.UsuarioId ?? null,

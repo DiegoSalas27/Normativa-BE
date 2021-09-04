@@ -32,36 +32,38 @@ namespace Aplicacion.PlanesTratamiento
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-
-                var tratamiento = await _context.Tratamiento.FindAsync(request.TratamientoId);
-
-                if (request.EstadosTratamientoId == new Guid("A2398FE0-9F21-4DE7-BA48-0B0B57B31E30"))
+                try
                 {
-                    request.UsuarioId = null;
-                }
+                    var tratamiento = await _context.Tratamiento.FindAsync(request.TratamientoId);
 
-                tratamiento.EvaluacionId = request.EvaluacionId;
-                tratamiento.UsuarioId = request.UsuarioId ?? null;
-                tratamiento.EstadosTratamientoId = request.EstadosTratamientoId ?? null;
-                tratamiento.Nombre = request.Nombre;
-                tratamiento.Codigo = request.Codigo;
+                    if (request.EstadosTratamientoId == new Guid("A2398FE0-9F21-4DE7-BA48-0B0B57B31E30"))
+                    {
+                        request.UsuarioId = null;
+                    }
 
-                foreach (var accionMitigacion in request.AccionMitigacionList)
-                {
-                    var foundAccionMitigacion = await _context.AccionMitigacion.FindAsync(accionMitigacion.AccionMitigacionId);
-                    foundAccionMitigacion.Descripcion = accionMitigacion.Descripcion;   
-                    foundAccionMitigacion.FechaInicio = accionMitigacion.FechaInicio;
-                    foundAccionMitigacion.FechaFin = accionMitigacion.FechaFin;
-                }
+                    tratamiento.EvaluacionId = request.EvaluacionId;
+                    tratamiento.UsuarioId = request.UsuarioId ?? null;
+                    tratamiento.EstadosTratamientoId = request.EstadosTratamientoId ?? null;
+                    tratamiento.Nombre = request.Nombre;
+                    tratamiento.Codigo = request.Codigo;
 
-                var valor = await _context.SaveChangesAsync();
+                    foreach (var accionMitigacion in request.AccionMitigacionList)
+                    {
+                        var foundAccionMitigacion = await _context.AccionMitigacion.FindAsync(accionMitigacion.AccionMitigacionId);
+                        foundAccionMitigacion.Descripcion = accionMitigacion.Descripcion;
+                        foundAccionMitigacion.FechaInicio = accionMitigacion.FechaInicio;
+                        foundAccionMitigacion.FechaFin = accionMitigacion.FechaFin;
+                    }
 
-                if (valor > 0)
-                {
+                    var valor = await _context.SaveChangesAsync();
+
                     return Unit.Value;
                 }
-
-                throw new Exception("No se pudo editar el tratamiento");
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw new Exception("No se pudo editar el tratamiento");
+                }
             }
         }
     }
