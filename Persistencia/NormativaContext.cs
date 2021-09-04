@@ -22,6 +22,9 @@ namespace Persistencia
             modelBuilder.Entity<Comentario>()
                 .HasOne(n => n.Usuario)
                 .WithMany(b => b.ComentarioList);
+            modelBuilder.Entity<Evaluacion>()
+                .HasOne(n => n.Usuario)
+                .WithMany(b => b.EvaluacionesList);
         }
 
         public DbSet<Especialidad> Especialidad { get; set; }

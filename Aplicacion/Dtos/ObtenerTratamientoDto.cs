@@ -15,7 +15,7 @@ namespace Aplicacion.Dtos
         public DateTime? FechaInicio { get; set;}
         public DateTime? FechaFin { get; set;}
         public string Nombre { get; set;}
-        public Guid? UsuarioId { get; set;}
+        public string UsuarioId { get; set;}
         public decimal PorcentajeAvance { get; set;}
         public string CodigoEvaluacion { get; set;}
         public string ListaVerificacionCodigo { get; set; }

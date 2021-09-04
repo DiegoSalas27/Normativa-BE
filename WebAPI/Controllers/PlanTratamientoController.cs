@@ -1,4 +1,5 @@
 ﻿using Aplicacion.Dtos;
+using Aplicacion.Dtos.statistics.Tratamiento;
 using Aplicacion.PlanesTratamiento;
 using Dominio;
 using MediatR;
@@ -30,6 +31,18 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<ObtenerTratamientoDto>> ObtenerTratamiento(string tratamientoCodigo)
         {
             return await Mediator.Send(new ObtenerTratamiento.Ejecuta { Codigo = tratamientoCodigo });
+        }
+
+        [HttpGet("statistics/resultados")]
+        public async Task<ActionResult<StatisticsTratamientoResultDto>> EstadisticaResultados([FromQuery(Name = "userId")] string userId)
+        {
+            return await Mediator.Send(new ConsultaResultadoStats.Listar { UsuarioId = userId });
+        }
+
+        [HttpGet("statistics/resultados/analistas")]
+        public async Task<ActionResult<StatisticsTratamientoResultAnalistasDto>> EstadisticaResultadosPorAnalista()
+        {
+            return await Mediator.Send(new ConsultaResultadoAnalistasStats.Listar());
         }
 
         [HttpPost]

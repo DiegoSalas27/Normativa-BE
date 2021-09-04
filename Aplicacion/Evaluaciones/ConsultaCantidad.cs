@@ -24,7 +24,7 @@ namespace Aplicacion.Evaluaciones
             }
             public async Task<int> Handle(Listar request, CancellationToken cancellationToken)
             {
-                var codigoEvaluacion = await _context.Evaluacion.CountAsync();
+                var codigoEvaluacion = await _context.Evaluacion.Where(ev => ev.Visbilidad == true).CountAsync();
                 return codigoEvaluacion;
             }
         }

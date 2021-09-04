@@ -17,7 +17,7 @@ namespace Aplicacion.PlanesTratamiento
             public Guid TratamientoId { get; set; }
             public Guid EvaluacionId { get; set; }
             public Guid? EstadosTratamientoId { get; set; }
-            public Guid? UsuarioId { get; set; }
+            public string UsuarioId { get; set; }
             public string Nombre { get; set; }
             public string Codigo { get; set; }
             public List<AccionMitigacion> AccionMitigacionList { get; set; }

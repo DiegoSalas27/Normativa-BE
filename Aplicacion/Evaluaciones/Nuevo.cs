@@ -22,6 +22,7 @@ namespace Aplicacion.Evaluaciones
             public string EvaluacionNombre { get; set; }
             public Guid ObraId { get; set; }
             public Guid ListaVerificacionId { get; set; }
+            public string UsuarioId { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -46,6 +47,7 @@ namespace Aplicacion.Evaluaciones
                     {
                         ObraId = request.ObraId,
                         ListaVerificacionId = request.ListaVerificacionId,
+                        UsuarioId = request.UsuarioId,
                         Codigo = request.EvaluacionCodigo,
                         FechaCreacion = DateTime.Now,
                         Estado = request.EstadoEvaluacion,

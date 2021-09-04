@@ -15,7 +15,7 @@ namespace Aplicacion.PlanesTratamiento
         public class Ejecuta : IRequest<Ejecuta>
         {
             public Guid EvaluacionId { get; set; }
-            public Guid? UsuarioId { get; set; }
+            public string UsuarioId { get; set; }
             public string Nombre  { get; set; }
             public string Codigo { get; set; }
         }

@@ -1,4 +1,6 @@
 ﻿using Aplicacion.Dtos;
+using Aplicacion.Dtos.statistics;
+using Aplicacion.Dtos.statistics.Evaluacion;
 using Aplicacion.Evaluaciones;
 using Dominio;
 using MediatR;
@@ -41,6 +43,18 @@ namespace WebAPI.Controllers
             if (filter == null)
                 filter = "";
             return await Mediator.Send(new Consulta.Listar { QueryLike = filter });
+        }
+
+        [HttpGet("statistics/resultados")]
+        public async Task<ActionResult<StatisticsEvaluacionResult>> EstadisticaResultados([FromQuery(Name = "userId")] string userId)
+        {
+            return await Mediator.Send(new ConsultaResultadoStats.Listar { UsuarioId = userId });
+        }
+
+        [HttpGet("statistics/cumplimiento")]
+        public async Task<ActionResult<StatisticsEvaluacionCumplimiento>> EstadisticaCumplimiento()
+        {
+            return await Mediator.Send(new ConsultaCumplimientoStats.Listar());
         }
 
         [HttpPut("{evaluacionId}")]

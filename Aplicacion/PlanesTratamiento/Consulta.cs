@@ -37,7 +37,7 @@ namespace Aplicacion.PlanesTratamiento
                         Nombre = t.Nombre,
                         FechaInicio = t.FechaInicio,
                         FechaFin = t.FechaFin,
-                        UsuarioId = (Guid)t.UsuarioId,
+                        UsuarioId = t.UsuarioId,
                         Evaluacion = t.Evaluacion.Codigo + " - " + t.Evaluacion.Nombre,
                         Responsable = t.Usuario.Nombres
                     })
