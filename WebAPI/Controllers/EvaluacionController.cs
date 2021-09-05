@@ -17,9 +17,9 @@ namespace WebAPI.Controllers
     public class EvaluacionController : MiControllerBase
     {
         [HttpGet("count")]
-        public async Task<ActionResult<int>> ObtenerNumeroEvaluacionesCount() 
+        public async Task<ActionResult<int>> ObtenerNumeroEvaluacionesCount([FromQuery(Name = "visible")] bool? visible) 
         {
-            return await Mediator.Send(new ConsultaCantidad.Listar());
+            return await Mediator.Send(new ConsultaCantidad.Listar { Visible = visible });
         }
 
         [HttpGet("{evaluacionCodigo}")]

@@ -13,7 +13,10 @@ namespace Aplicacion.Evaluaciones
 {
     public class ConsultaCantidad
     {
-        public class Listar : IRequest<int> { }
+        public class Listar : IRequest<int> 
+        { 
+            public bool? Visible { get; set; }
+        }
 
         public class Manejador : IRequestHandler<Listar, int>
         {
@@ -24,7 +27,15 @@ namespace Aplicacion.Evaluaciones
             }
             public async Task<int> Handle(Listar request, CancellationToken cancellationToken)
             {
-                var codigoEvaluacion = await _context.Evaluacion.Where(ev => ev.Visbilidad == true).CountAsync();
+                var codigoEvaluacion = 0;
+                if (request.Visible != null)
+                {
+                    codigoEvaluacion = await _context.Evaluacion.Where(ev => ev.Visbilidad == request.Visible).CountAsync();
+                }
+                else
+                {
+                    codigoEvaluacion = await _context.Evaluacion.CountAsync();
+                }
                 return codigoEvaluacion;
             }
         }
