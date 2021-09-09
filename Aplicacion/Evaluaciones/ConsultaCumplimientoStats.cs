@@ -28,7 +28,7 @@ namespace Aplicacion.Evaluaciones
                 var pruebasEvaluacionList = await _context.Evaluacion
                     .Select(ev => new ListaPruebaEvaluacionDto
                     {
-                        Prueba = ev.PruebaList.OrderByDescending(pl => pl.FechaCreacion).FirstOrDefault(),
+                        Prueba = ev.PruebaList.OrderByDescending(pl => pl.FechaCreacion).Where(pr => pr.Visbilidad == true).FirstOrDefault(),
                         Visbilidad = ev.Visbilidad
                     })
                     .Where(ev => ev.Prueba != null && ev.Visbilidad == true)

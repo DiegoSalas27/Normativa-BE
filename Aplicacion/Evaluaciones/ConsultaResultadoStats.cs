@@ -45,7 +45,7 @@ namespace Aplicacion.Evaluaciones
                             Codigo = ev.Codigo,
                             Nombre = ev.Nombre,
                             Visbilidad = ev.Visbilidad,
-                            Prueba = ev.PruebaList.OrderByDescending(pl => pl.FechaCreacion).FirstOrDefault(),
+                            Prueba = ev.PruebaList.OrderByDescending(pl => pl.FechaCreacion).Where(pr => pr.Visbilidad == true).FirstOrDefault(),
                             FechaCreacion = ev.FechaCreacion,
                             UsuarioId = ev.UsuarioId,
                         })
