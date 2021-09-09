@@ -20,5 +20,7 @@ namespace Aplicacion.Dtos.statistics
         public bool Visbilidad { get; set; } = false;
         public DateTime FechaCreacion { get; set; }
         public Prueba Prueba { get; set; }
+
+
     }
 }

@@ -57,6 +57,18 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ConsultaCumplimientoStats.Listar());
         }
 
+         [HttpGet("statistics/cumplimientoprueba")]
+        public async Task<ActionResult<StatisticsEvaluacionCumplimientoPrueba>> EstadisticaCumplimientoPrueba()
+        {
+            return await Mediator.Send(new ConsultaCumplimientoPruebaStats.Listar());
+        }
+
+        [HttpGet("statistics/cumplimientopruebalista")]
+        public async Task<ActionResult<StatisticsEvaluacionCumplimientoPruebaLista>> EstadisticaCumplimientoPruebaLista()
+        {
+            return await Mediator.Send(new ConsultaCumplimientoPruebaStatsLista.Listar());
+        }
+
         [HttpPut("{evaluacionId}")]
         public async Task<ActionResult<Unit>> ActualizarEvaluacion(Guid evaluacionId, EvaluacionActualizar.Ejecuta parametros)
         {
