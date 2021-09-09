@@ -4,6 +4,7 @@ using Aplicacion.PlanesTratamiento;
 using Dominio;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Persistencia.DapperConexion.Paginacion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("lista")]
-        public async Task<ActionResult<List<ListarTratamientoDto>>> Listar([FromQuery(Name = "filter")] string filter, [FromQuery(Name = "page")] int page)
+        public async Task<ActionResult<PaginacionModel>> Listar
+                    ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity, Consulta.Listar parametros)
         {
-            if (filter == null)
-                filter = "";
-            return await Mediator.Send(new Consulta.Listar { QueryLike = filter, NumeroPagina = page });
+            parametros.CantidadElementos = quantity;
+            parametros.NumeroPagina = page;
+
+            return await Mediator.Send(parametros);
         }
 
         [HttpGet("{tratamientoCodigo}")]
@@ -37,6 +40,12 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<StatisticsTratamientoResultDto>> EstadisticaResultados([FromQuery(Name = "userId")] string userId)
         {
             return await Mediator.Send(new ConsultaResultadoStats.Listar { UsuarioId = userId });
+        }
+
+        [HttpGet("statistics/resultadosLista")]
+        public async Task<ActionResult<StatisticsTratamientoResultListaDto>> EstadisticaResultadosLista()
+        {
+            return await Mediator.Send(new ConsultaResultadoStatsLista.Listar());
         }
 
         [HttpGet("statistics/resultados/analistas")]
