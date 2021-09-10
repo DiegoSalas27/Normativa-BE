@@ -22,12 +22,13 @@ namespace WebAPI.Controllers
 
         [HttpGet("lista")]
         public async Task<ActionResult<PaginacionModel>> Listar
-                    ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity, Consulta.Listar parametros)
+                    ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
         {
-            parametros.CantidadElementos = quantity;
-            parametros.NumeroPagina = page;
+            //parametros.CantidadElementos = quantity;
+            //parametros.NumeroPagina = page;
 
-            return await Mediator.Send(parametros);
+            //return await Mediator.Send(parametros);
+            return await Mediator.Send(new Consulta.Listar { NumeroPagina = page, CantidadElementos = quantity });
         }
 
         [HttpGet("{tratamientoCodigo}")]
