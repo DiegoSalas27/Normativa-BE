@@ -1,6 +1,8 @@
 ﻿using Aplicacion.Dtos;
 using Aplicacion.ListaVerificaciones;
+using AplicacionListaVerificaciones;
 using Dominio;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -24,21 +26,21 @@ namespace WebAPI.Controllers
                 filter = "";
             return await Mediator.Send(new Consulta.Listar { QueryLike = filter });
         }
-        [HttpPut("{listaVerificacionId}")]
-        public async Task<ActionResult<Unit>> ActualizarEvaluacion(Guid listaVerificacionId, ListaVerificacionActualizar.Ejecuta parametros)
-        {
-            parametros.EvaluacionId = evaluacionId;
-            return await Mediator.Send(parametros);
-        }
-        [HttpPost]
-        public async Task<ActionResult<Unit>> RegistrarListaVerificacion(Nuevo.Ejecuta parametros)
-        {
-            return await Mediator.Send(parametros);
-        }
-        [HttpDelete("{listaVerificacionId}")]
-        public async Task<ActionResult<Unit>> EliminarListaVerificacion(Guid listaVerificacionId)
-        {
-            return await Mediator.Send(new ListaVerificacionEliminar.Ejecuta { ListaVerificacionId = listaVerificacionId });
-        }
+        //[HttpPut("{listaVerificacionId}")]
+        //public async Task<ActionResult<Unit>> ActualizarEvaluacion(Guid listaVerificacionId, ListaVerificacionActualizar.Ejecuta parametros)
+        //{
+        //    parametros.EvaluacionId = evaluacionId;
+        //    return await Mediator.Send(parametros);
+        //}
+        //[HttpPost]
+        //public async Task<ActionResult<Unit>> RegistrarListaVerificacion(Nuevo.Ejecuta parametros)
+        //{
+        //    return await Mediator.Send(parametros);
+        //}
+        //[HttpDelete("{listaVerificacionId}")]
+        //public async Task<ActionResult<Unit>> EliminarListaVerificacion(Guid listaVerificacionId)
+        //{
+        //    return await Mediator.Send(new ListaVerificacionEliminar.Ejecuta { ListaVerificacionId = listaVerificacionId });
+        //}
     }
 }
