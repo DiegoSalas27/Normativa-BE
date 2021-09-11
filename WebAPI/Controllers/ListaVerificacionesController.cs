@@ -1,6 +1,5 @@
 ﻿using Aplicacion.Dtos;
 using Aplicacion.ListaVerificaciones;
-using AplicacionListaVerificaciones;
 using Dominio;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
