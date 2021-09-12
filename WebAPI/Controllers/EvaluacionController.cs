@@ -38,11 +38,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("lista")]
-        public async Task<ActionResult<List<ObtenerEvaluacionesDto>>> Listar([FromQuery(Name = "filter")] string filter)
+        public async Task<ActionResult<PaginacionModel>> Listar
+              ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
         {
-            if (filter == null)
-                filter = "";
-            return await Mediator.Send(new Consulta.Listar { QueryLike = filter });
+
+            //return await Mediator.Send(new Consulta.Listar { QueryLike = filter });  
+            return await Mediator.Send(new Consulta.Listar { NumeroPagina = page, CantidadElementos = quantity });
         }
 
         [HttpGet("statistics/resultados")]
