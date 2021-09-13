@@ -58,9 +58,12 @@ namespace Aplicacion.EvidenciaRequerimientos
                 foreach (var comentario in evidenciaAccionMitigacion.ComentarioLista)
                 {
                     var usuario = await _userManager.FindByIdAsync(comentario.UsuarioId);
-                    var rol = new List<string>(await _userManager.GetRolesAsync(usuario));
-                    comentario.NombreUsuario = usuario.Nombres + ' ' + usuario.Apellidos;
-                    comentario.UsuarioRol = rol.ElementAt(0);
+                    if (usuario != null)
+                    {
+                        var rol = new List<string>(await _userManager.GetRolesAsync(usuario));
+                        comentario.NombreUsuario = usuario.Nombres + ' ' + usuario.Apellidos;
+                        comentario.UsuarioRol = rol.ElementAt(0);
+                    }
                 }
 
                 return evidenciaAccionMitigacion;
