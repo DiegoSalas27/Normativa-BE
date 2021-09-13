@@ -104,6 +104,8 @@ namespace Normativa
             services.AddScoped<IUsuarioSesion, UsuarioSesion>();
             services.AddScoped<IPaginacion, PaginacionRepositorio>();
             services.AddAutoMapper(typeof(Aplicacion.ListaVerificaciones.Consulta.Manejador));
+
+            // add swagger
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

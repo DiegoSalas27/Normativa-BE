@@ -53,7 +53,7 @@ namespace Aplicacion.ListaVerificaciones
                 var tratamientos = new List<Tratamiento>();
                 foreach (var evaluacion in evaluaciones)
                 {
-                    await tratamientos.AddRange(_context.Tratamiento
+                    tratamientos.AddRange(await _context.Tratamiento
                     .Where(t => t.EvaluacionId == evaluacion.EvaluacionId)
                     .ToListAsync());
                 }
@@ -61,7 +61,7 @@ namespace Aplicacion.ListaVerificaciones
                 var accionesMitigacion = new List<AccionMitigacion>();
                 foreach (var tratamiento in tratamientos)
                 {
-                    await accionesMitigacion.AddRange(_context.AccionMitigacion
+                    accionesMitigacion.AddRange(await _context.AccionMitigacion
                     .Where(am => am.TratamientoId == tratamiento.TratamientoId)
                     .ToListAsync());
                 }
@@ -69,7 +69,7 @@ namespace Aplicacion.ListaVerificaciones
                 var comentarios = new List<Comentario>();
                 foreach (var accionMitigacion in accionesMitigacion)
                 {
-                    await comentarios.AddRange(_context.Comentario
+                    comentarios.AddRange(await _context.Comentario
                     .Where(c => c.AccionMitigacionId == accionMitigacion.AccionMitigacionId)
                     .ToListAsync());
                 }
@@ -77,7 +77,7 @@ namespace Aplicacion.ListaVerificaciones
                 var pruebas = new List<Prueba>();
                 foreach (var evaluacion in evaluaciones)
                 {
-                    await pruebas.AddRange(_context.Prueba
+                    pruebas.AddRange(await _context.Prueba
                     .Where(p => p.EvaluacionId == evaluacion.EvaluacionId)
                     .ToListAsync());
                 }
@@ -85,7 +85,7 @@ namespace Aplicacion.ListaVerificaciones
                 var evidenciasRequerimiento = new List<EvidenciaRequerimiento>();
                 foreach (var requerimiento in requerimientos)
                 {
-                    await evidenciasRequerimiento.AddRange(_context.EvidenciaRequerimiento
+                    evidenciasRequerimiento.AddRange(await _context.EvidenciaRequerimiento
                     .Where(e => e.RequerimientoId == requerimiento.RequerimientoId)
                     .ToListAsync());
                 }

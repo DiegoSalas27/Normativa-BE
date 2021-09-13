@@ -22,6 +22,12 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ConsultaCantidad.Listar { Visible = visible });
         }
 
+        [HttpGet("ultimoCodigo")]
+        public async Task<ActionResult<object>> ObtenerEvaluacionesLastCode()
+        {
+            return await Mediator.Send(new ConsultaUltimoCodigo.Listar());
+        }
+
         [HttpGet("{evaluacionCodigo}")]
         public async Task<ActionResult<ObtenerEvaluacionDetalle>> ObtenerEvaluacion(string evaluacionCodigo)
         {

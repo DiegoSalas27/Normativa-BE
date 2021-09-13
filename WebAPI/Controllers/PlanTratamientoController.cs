@@ -20,6 +20,12 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ConsultaCantidad.Listar());
         }
 
+        [HttpGet("ultimoCodigo")]
+        public async Task<ActionResult<object>> ObtenerPlanesTratamientoLastCode()
+        {
+            return await Mediator.Send(new ConsultaUltimoCodigo.Listar());
+        }
+
         [HttpGet("lista")]
         public async Task<ActionResult<PaginacionModel>> Listar
                     ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)

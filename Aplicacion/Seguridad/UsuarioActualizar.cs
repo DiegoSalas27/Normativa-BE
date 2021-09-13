@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Aplicacion.Constants;
 using Aplicacion.Contratos;
 using Aplicacion.ManejadorError;
 using Aplicacion.Seguridad;
@@ -88,6 +89,30 @@ namespace Seguridad
 
                 var especialidad = request.Especialidad != null ? _context.Especialidad.Where(x => x.Descripcion == request.Especialidad).First() : null;
 
+
+                var lastUserInRolCodigo = _userManager.GetUsersInRoleAsync(request.Rol).Result.OrderByDescending(ev => ev.Codigo).FirstOrDefault().Codigo;
+
+                var codigoGenerado = "";
+                var codigoPrefijo = "";
+
+                switch (rol.Name)
+                {
+                    case "Analistas": codigoPrefijo = EntityCodes.Analistas; break;
+                    case "Administrador": codigoPrefijo = EntityCodes.Administrador; break;
+                    case "Jefe de riesgos": codigoPrefijo = EntityCodes.Jefe_de_riesgos; break;
+                    case "Alta gerencia": codigoPrefijo = EntityCodes.Alta_gerencia; break;
+                }
+
+                if (lastUserInRolCodigo == null)
+                {
+                    codigoGenerado = codigoPrefijo + "001";
+                }
+                else
+                {
+                    string substr = lastUserInRolCodigo.Substring(2, 3);
+                    codigoGenerado = codigoPrefijo + (int.Parse(substr) + 1).ToString().PadLeft(substr.Length, '0');
+                }
+
                 usuario.Email = request.Email ?? usuario.Email;
                 usuario.Nombres = request.Nombres ?? usuario.Nombres;
                 usuario.Apellidos = request.Apellidos ?? usuario.Apellidos;
@@ -100,6 +125,7 @@ namespace Seguridad
                 }
                 usuario.UserName = request.Username ?? usuario.UserName;
                 usuario.EspecialidadId = especialidad != null ? especialidad.Id : null;
+                usuario.Codigo = codigoGenerado;
 
                 var roles_usuario = await _userManager.GetRolesAsync(usuario);
                 var removedRoles = await _userManager.RemoveFromRolesAsync(usuario, roles_usuario);

@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Aplicacion.Constants;
 using Aplicacion.Contratos;
 using Aplicacion.ManejadorError;
 using Dominio;
@@ -84,29 +85,29 @@ namespace Aplicacion.Seguridad
                     throw new ManejadorExcepcion(HttpStatusCode.BadRequest, new { mensaje = "El nombre de usuario ingresado ya existe" });
                 }
 
-                var numUsersInRol = _userManager.GetUsersInRoleAsync(request.Rol).Result.Count;
+                var lastUserInRolCodigo = _userManager.GetUsersInRoleAsync(request.Rol).Result.OrderByDescending(ev => ev.Codigo).FirstOrDefault().Codigo;
 
                 var codigoGenerado = "";
-                var zeroCount = "";
-
-                if (numUsersInRol < 10)
-                {
-                    zeroCount = "00";
-                }
-                else
-                {
-                    zeroCount = "0";
-                }
+                var codigoPrefijo = "";
 
                 switch (rol.Name)
                 {
-                    case "Analistas": codigoGenerado = "AN" + zeroCount + (numUsersInRol + 1).ToString(); break;
-                    case "Administrador": codigoGenerado = "AD" + zeroCount + (numUsersInRol + 1).ToString(); break;
-                    case "Jefe de riesgos": codigoGenerado = "JF" + zeroCount + (numUsersInRol + 1).ToString(); break;
-                    case "Alta gerencia": codigoGenerado = "AG" + zeroCount + (numUsersInRol + 1).ToString(); break;
+                    case "Analistas": codigoPrefijo = EntityCodes.Analistas; break;
+                    case "Administrador": codigoPrefijo = EntityCodes.Administrador; break;
+                    case "Jefe de riesgos": codigoPrefijo = EntityCodes.Jefe_de_riesgos; break;
+                    case "Alta gerencia": codigoPrefijo = EntityCodes.Alta_gerencia; break;
                 }
 
-        
+                if (lastUserInRolCodigo == null)
+                {
+                    codigoGenerado = codigoPrefijo + "001";
+                }
+                else
+                {
+                    string substr = lastUserInRolCodigo.Substring(2, 3);
+                    codigoGenerado = codigoPrefijo + (int.Parse(substr) + 1).ToString().PadLeft(substr.Length, '0');
+                }
+
                 var especialidad = _context.Especialidad.Where(x => x.Descripcion == request.Especialidad).FirstOrDefault();
         
 

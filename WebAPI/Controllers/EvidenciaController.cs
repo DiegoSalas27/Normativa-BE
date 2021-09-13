@@ -37,6 +37,12 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ConsultaCantidad.Listar());
         }
 
+        [HttpGet("ultimoCodigo")]
+        public async Task<ActionResult<object>> ObtenerEvidenciaLastCode()
+        {
+            return await Mediator.Send(new ConsultaUltimoCodigo.Listar());
+        }
+
         [HttpGet("[action]/{filePath}")]
         public async Task<FileResult> DownloadFile(string filePath)
         {

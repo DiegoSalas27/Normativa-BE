@@ -18,6 +18,12 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ConsultaCantidad.Listar());
         }
 
+        [HttpGet("ultimoCodigo")]
+        public async Task<ActionResult<object>> ObtenerPruebasLastCode()
+        {
+            return await Mediator.Send(new ConsultaUltimoCodigo.Listar());
+        }
+
         [HttpGet("{pruebaCodigo}")]
         public async Task<ActionResult<ResultadoPruebaDto>> ObtenerResultadosDePrueba(string pruebaCodigo) 
         {
