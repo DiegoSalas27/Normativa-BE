@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Aplicacion.Dtos.statistics.ListaVerificacion;
 
 namespace WebAPI.Controllers
 {
@@ -25,6 +26,13 @@ namespace WebAPI.Controllers
                 filter = "";
             return await Mediator.Send(new Consulta.Listar { QueryLike = filter });
         }
+
+        [HttpGet("statistics/lista")]
+        public async Task<ActionResult<StatisticsListaVerificacion>> EstadisticaListaVerificacion()
+        {
+            return await Mediator.Send(new ConsultaListaVerificacionStats.Listar());
+        }
+
         [HttpPut("{listaVerificacionId}")]
         public async Task<ActionResult<Unit>> ActualizarListaVerificacion(Guid listaVerificacionId, ListaVerificacionActualizar.Ejecuta parametros)
         {
