@@ -16,5 +16,6 @@ namespace Aplicacion.Dtos
         public decimal? RespuestaItem { get; set; }
         public string? Recomendacion { get; set; }
 
+        public string? EvidenciaLink { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace Aplicacion.helpers
 
         private Table getTable()
         {
-            float[] cellWidth = { 20f, 80f };
+            float[] cellWidth = { 80f };
             Table tableEvent = new Table(UnitValue.CreatePercentArray(cellWidth)).UseAllAvailableWidth();
 
             Style styleCell = new Style()
@@ -55,17 +55,23 @@ namespace Aplicacion.helpers
             Style styleText = new Style()
                 .SetTextAlignment(TextAlignment.RIGHT).SetFontSize(10f);
 
-            Cell cell = new Cell().Add(Img.SetAutoScale(true));
-                //.SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
 
-            tableEvent.AddCell(cell
-                .AddStyle(styleCell)
-                .SetTextAlignment(TextAlignment.LEFT));
+           //Cell cell = new Cell().Add(Img.SetAutoScale(true));
+           // //.SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
+
+           // tableEvent.AddCell(cell
+           //     .AddStyle(styleCell)
+           //     .SetTextAlignment(TextAlignment.LEFT));
+
             PdfFont bold = PdfFontFactory.CreateFont(StandardFonts.TIMES_BOLD);
-            cell = new Cell()
-                .Add(new Paragraph("Reporte diario\n").SetFont(bold))
-                .Add(new Paragraph("Hola\n").SetFont(bold))
-                .Add(new Paragraph("Fecha de emisión: " + CustomTimeZone.DateNow().ToShortDateString()))
+            PdfFont roman = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
+
+            Text first = new Text("CONURAM: ").SetFont(bold);
+            Text second = new Text("Confidencial – Solo para uso interno").SetFont(roman);
+            Paragraph paragraph = new Paragraph().Add(first).Add(second);
+
+            Cell cell = new Cell()
+                .Add(paragraph)
                 .AddStyle(styleText).AddStyle(styleCell);
                 //.SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
 

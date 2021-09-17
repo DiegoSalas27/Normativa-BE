@@ -25,5 +25,16 @@ namespace Aplicacion.Dtos
         public DateTime ListaVerificacionFechaCreacion { get; set; }
         public int RequerimientosCount { get; set; }
         public IEnumerable<PruebaDetalleListaDto> PruebaList { get; set; }
+        public Prueba? Prueba { get; set; } 
+        public string? NombreAnalista { get; set; }
+        public string? ObraNombre { get; set; }
+        public string? NombreListaVerificacion { get; set; }
+
+        public IEnumerable<Requerimiento>? RequerimientoList { get; set; }
+        public IEnumerable<ObtenerListaRequerimientoResultadoDto>? RequerimientosResultado { get; set; }
+        public IEnumerable<CriterioResultadoDto>? CriteriosResultado { get; set; }
+
+        public decimal? PorcentajeCumplimientoTotal { get; set; } = 0;
+        public string? NivelDeRiesgo { get; set; }
     }
 }
