@@ -41,7 +41,13 @@ namespace WebAPI.Controllers
         {
             var ms = await Mediator.Send(new GenerarInforme.Ejecuta { Codigo = evaluacionCodigo });
 
-            return new FileStreamResult(ms, "application/pdf");
+            byte[] bytesStream = ms.ToArray();
+
+            //return new FileStreamResult(ms, "application/pdf");
+
+            Response.Headers.Add("Content-Disposition", "attachment; filename=" + "Informe Evaluacion");
+
+            return File(bytesStream, "application/octet-stream");
         }
 
         [HttpGet("lista")]

@@ -11,6 +11,7 @@ namespace Aplicacion.Dtos
     {
         public Guid EvaluacionId { get; set; }
         public string Codigo { get; set; }
+        public Guid EstadoEvaluacionId { get; set; }
         public string Estado { get; set; }
         public string Nombre { get; set; }
         public DateTime FechaCreacion { get; set; }
@@ -24,6 +25,7 @@ namespace Aplicacion.Dtos
         public string CodigoConcatenadoListaVerificacion { get; set; }
         public DateTime ListaVerificacionFechaCreacion { get; set; }
         public int RequerimientosCount { get; set; }
+        public IEnumerable<ObservacionListaDto> ObservacionLista { get; set; }
         public IEnumerable<PruebaDetalleListaDto> PruebaList { get; set; }
         public Prueba? Prueba { get; set; } 
         public string? NombreAnalista { get; set; }

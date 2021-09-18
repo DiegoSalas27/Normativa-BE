@@ -35,6 +35,7 @@ namespace Aplicacion.Evaluaciones
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
                 var evaluacionExists = await _context.Evaluacion.Where(ev => ev.Codigo == request.EvaluacionCodigo).FirstOrDefaultAsync();
+                var estadoDefault = await _context.EstadosEvaluacion.Where(eve => eve.Nombre == "Pendiente").FirstOrDefaultAsync();
 
                 if (evaluacionExists != null && evaluacionExists.Visbilidad)
                 {
@@ -47,10 +48,10 @@ namespace Aplicacion.Evaluaciones
                     {
                         ObraId = request.ObraId,
                         ListaVerificacionId = request.ListaVerificacionId,
+                        EstadosEvaluacionId = estadoDefault.EstadosEvaluacionId,
                         UsuarioId = request.UsuarioId,
                         Codigo = request.EvaluacionCodigo,
                         FechaCreacion = DateTime.Now,
-                        Estado = request.EstadoEvaluacion,
                         Nombre = request.EvaluacionNombre,
                         PorcentajeFinal = 0,
                     };

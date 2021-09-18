@@ -1,5 +1,4 @@
-﻿using Castle.MicroKernel.SubSystems.Conversion;
-using Dominio;
+﻿using Dominio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

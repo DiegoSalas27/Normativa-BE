@@ -1,6 +1,7 @@
 ﻿using Aplicacion.Dtos;
 using Dominio;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistencia;
 using System;
@@ -22,10 +23,15 @@ namespace Aplicacion.Evaluaciones
         public class Manejador : IRequestHandler<Ejecuta, ObtenerEvaluacionDetalle>
         {
             private readonly NormativaContext _context;
-            public Manejador(NormativaContext context)
+            private readonly UserManager<Usuario> _userManager;
+            public Manejador(UserManager<Usuario> userManager, NormativaContext context)
             {
                 _context = context;
+                _userManager = userManager;
             }
+
+            public UserManager<Usuario> UserManager => _userManager;
+
             public async Task<ObtenerEvaluacionDetalle> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
 
@@ -35,7 +41,8 @@ namespace Aplicacion.Evaluaciones
                     {
                         EvaluacionId = ev.EvaluacionId,
                         Codigo = ev.Codigo,
-                        Estado = ev.Estado,
+                        EstadoEvaluacionId = (Guid)ev.EstadosEvaluacionId,
+                        Estado = ev.EstadosEvaluacion.Nombre,
                         Visibilidad = ev.Visbilidad,
                         Nombre = ev.Nombre,
                         FechaCreacion = ev.FechaCreacion,
@@ -47,6 +54,12 @@ namespace Aplicacion.Evaluaciones
                         CodigoConcatenadoObra = ev.Obra.Codigo + '-' + ev.Obra.Nombre,
                         CodigoObra = ev.Obra.Codigo,
                         ObraId = ev.ObraId,
+                        ObservacionLista = ev.ObservacionLista.Select(obl => new ObservacionListaDto
+                        {
+                            UsuarioId = obl.UsuarioId,
+                            Descripcion = obl.Descripcion,
+                            FechaCreacion = obl.FechaCreacion
+                        }).OrderByDescending(obld => obld.FechaCreacion).ToList(),
                         PruebaList = ev.PruebaList.Select(pl => new PruebaDetalleListaDto
                         {
                             Codigo = pl.Codigo,
@@ -56,6 +69,17 @@ namespace Aplicacion.Evaluaciones
                         })
                     })
                     .FirstOrDefaultAsync();
+
+                foreach (var observacion in evaluacion.ObservacionLista)
+                {
+                    var usuario = await UserManager.FindByIdAsync(observacion.UsuarioId);
+                    if (usuario != null)
+                    {
+                        var rol = new List<string>(await UserManager.GetRolesAsync(usuario));
+                        observacion.NombreUsuario = usuario.Nombres + ' ' + usuario.Apellidos;
+                        observacion.UsuarioRol = rol.ElementAt(0);
+                    }
+                }
 
                 return evaluacion;
             }

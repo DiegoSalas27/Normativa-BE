@@ -22,6 +22,9 @@ namespace Persistencia
             modelBuilder.Entity<Comentario>()
                 .HasOne(n => n.Usuario)
                 .WithMany(b => b.ComentarioList);
+            modelBuilder.Entity<Observacion>()
+               .HasOne(n => n.Usuario)
+               .WithMany(b => b.ObservacionLista);
             modelBuilder.Entity<Evaluacion>()
                 .HasOne(n => n.Usuario)
                 .WithMany(b => b.EvaluacionesList);
@@ -30,6 +33,7 @@ namespace Persistencia
         public DbSet<Especialidad> Especialidad { get; set; }
         public DbSet<AccionMitigacion> AccionMitigacion { get; set; }
         public DbSet<Comentario> Comentario { get; set; }
+        public DbSet<Observacion> Observacion { get; set; }
         public DbSet<Criterio> Criterio { get; set; }
         public DbSet<Evaluacion> Evaluacion { get; set; }
         public DbSet<Evidencia> Evidencia { get; set; }
@@ -41,5 +45,6 @@ namespace Persistencia
         public DbSet<Requerimiento> Requerimiento { get; set; }
         public DbSet<Tratamiento> Tratamiento { get; set; }
         public DbSet<EstadosTratamiento> EstadosTratamiento { get; set; }
+        public DbSet<EstadosEvaluacion> EstadosEvaluacion { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistencia;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace Aplicacion.Evaluaciones
         {
             public Guid EvaluacionId { get; set; }
             public string Nombre { get; set; }
+            public Guid Estado { get; set; }
+            public string CodigoEspecialista { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -29,8 +32,18 @@ namespace Aplicacion.Evaluaciones
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
                 var evaluacion = await _context.Evaluacion.FindAsync(request.EvaluacionId);
+                var estadoSelected = await _context.EstadosEvaluacion
+                    .Where(eve => eve.EstadosEvaluacionId == request.Estado && eve.Nombre == "Aprobado")
+                    .AnyAsync();
+
+                if (estadoSelected)
+                {
+                    evaluacion.FechaAprobacion = DateTime.Now;
+                }
 
                 evaluacion.Nombre = request.Nombre;
+                evaluacion.EstadosEvaluacionId = request.Estado;
+                evaluacion.CodigoEspecialista = request.CodigoEspecialista ?? evaluacion.CodigoEspecialista;
 
                 var resultado = await _context.SaveChangesAsync();
 

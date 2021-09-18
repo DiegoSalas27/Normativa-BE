@@ -42,6 +42,7 @@ namespace Aplicacion.Seguridad
                     Rol = listaRoles.Count > 0 ? listaRoles[0] : null,
                     PhoneNumber = usuario.PhoneNumber,
                     FechaNacimiento = usuario.FechaNacimiento,
+                    Codigo = usuario.Codigo
                 };
             }
         }

@@ -15,6 +15,7 @@ namespace Dominio
         public string Codigo { get; set; }
         public ICollection<Tratamiento> TratamientoList { get; set; }
         public ICollection<Comentario> ComentarioList { get; set; }
+        public ICollection<Observacion> ObservacionLista { get; set; }
         public ICollection<Evaluacion> EvaluacionesList { get; set; }
     }
 }
