@@ -96,6 +96,7 @@ namespace Aplicacion.Seguridad
                     case "Administrador": codigoPrefijo = EntityCodes.Administrador; break;
                     case "Jefe de riesgos": codigoPrefijo = EntityCodes.Jefe_de_riesgos; break;
                     case "Alta gerencia": codigoPrefijo = EntityCodes.Alta_gerencia; break;
+                    case "Especialistas": codigoPrefijo = EntityCodes.Especialista; break;
                 }
 
                 if (lastUserInRolCodigo == null)

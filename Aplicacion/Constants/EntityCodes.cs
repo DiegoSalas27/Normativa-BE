@@ -16,6 +16,7 @@ namespace Aplicacion.Constants
         public const string Administrador = "AD";
         public const string Jefe_de_riesgos = "JF";
         public const string Alta_gerencia = "AG";
+        public const string Especialista = "ES";
 
     }
 }
