@@ -11,10 +11,13 @@ namespace Aplicacion.Dtos
     {
         public Guid EvaluacionId { get; set; }
         public string Codigo { get; set; }
+        public string CodigoEspecialista { get; set; }
         public Guid EstadoEvaluacionId { get; set; }
         public string Estado { get; set; }
         public string Nombre { get; set; }
         public DateTime FechaCreacion { get; set; }
+        public DateTime? FechaAprobacion { get; set; }
+
         public Guid ListaVerificacionId { get; set; }
         public bool Visibilidad { get; set; } = false;
         public string CodigoConcatenadoObra { get; set; }

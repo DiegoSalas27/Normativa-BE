@@ -17,8 +17,10 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Persistencia;
 using System;
 using System.Collections.Generic;
@@ -41,10 +43,17 @@ namespace Aplicacion.Evaluaciones
         {
             private readonly NormativaContext _context;
             private readonly IWebHostEnvironment _webHostEnvironment;
-            public Manejador(NormativaContext context, IWebHostEnvironment webHostEnvironment)
+            private readonly ILogger<GenerarInforme> _logger;
+            private readonly UserManager<Usuario> _userManager;
+            public Manejador(NormativaContext context, 
+                IWebHostEnvironment webHostEnvironment, 
+                ILogger<GenerarInforme> logger,
+                UserManager<Usuario> userManager)
             {
                 _context = context;
                 _webHostEnvironment = webHostEnvironment;
+                _logger = logger;
+                _userManager = userManager;
             }
 
             public async Task<MemoryStream> Handle(Ejecuta request, CancellationToken cancellationToken)
@@ -57,10 +66,12 @@ namespace Aplicacion.Evaluaciones
                         {
                             EvaluacionId = ev.EvaluacionId,
                             Codigo = ev.Codigo,
+                            CodigoEspecialista = ev.CodigoEspecialista,
                             Estado = ev.EstadosEvaluacion.Nombre,
                             Visibilidad = ev.Visbilidad,
                             Nombre = ev.Nombre,
                             FechaCreacion = ev.FechaCreacion,
+                            FechaAprobacion = ev.FechaAprobacion,
                             ListaVerificacionId = ev.ListaVerificacion.ListaVerificacionId,
                             CodigoListaVerificacion = ev.ListaVerificacion.Codigo,
                             CodigoConcatenadoListaVerificacion = ev.ListaVerificacion.Codigo + '-' + ev.ListaVerificacion.Nombre,
@@ -104,6 +115,8 @@ namespace Aplicacion.Evaluaciones
                             NombreAnalista = ev.Usuario.Nombres + " " + ev.Usuario.Apellidos
                         })
                         .FirstOrDefaultAsync();
+
+                    Usuario especialista = await _userManager.FindByIdAsync(evaluacion.CodigoEspecialista);
 
                     var criterios = new List<CriterioResultadoDto>();
                     var nivelesDeRiesgo = new List<NivelesRiesgo>();
@@ -167,20 +180,10 @@ namespace Aplicacion.Evaluaciones
 
                     string contentRootPath = _webHostEnvironment.ContentRootPath;
 
-                    string pathLogo = System.IO.Path.Combine(contentRootPath, "Contents/Images/palermo.jpg");
+                    string pathLogo = System.IO.Path.Combine(contentRootPath, "wwwroot/Contents/Images/palermo.jpg");
                     Image img = new Image(ImageDataFactory.Create(pathLogo));
                     pdfDocument.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderEventHandler(img)); // añadir contenido cuando se crea la pag cuando se crea la pagina
                                                                                                            //pdfDocument.AddEventHandler(PdfDocumentEvent.END_PAGE, new FooterEventHandler()); // cuando ya se agrego contenido a todo el documento (cuando ya se agregó contenido a todo el documento)
-
-                    //PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
-
-                    //Style styles = new Style()
-                    //    .SetFontSize(24)
-                    //    .SetFont(font)
-                    //    .SetFontColor(ColorConstants.BLUE)
-                    //    .SetBackgroundColor(ColorConstants.RED);
-
-                    //doc.Add(new Paragraph("Informe de evaluación " + evaluacion.Nombre).AddStyle(styles));
 
                     #region styles
 
@@ -252,9 +255,9 @@ namespace Aplicacion.Evaluaciones
 
                     _cell = new Cell().Add(new Paragraph(evaluacion.NombreAnalista));
                     _table.AddCell(_cell.AddStyle(styleDefinitionCell));
-                    _cell = new Cell().Add(new Paragraph("Nombre de especialista "));
+                    _cell = new Cell().Add(new Paragraph(especialista.Nombres + " " + especialista.Apellidos));
                     _table.AddCell(_cell.AddStyle(styleDefinitionCell));
-                    _cell = new Cell().Add(new Paragraph("DD/MM/YYYY"));
+                    _cell = new Cell().Add(new Paragraph(((DateTime)evaluacion.FechaAprobacion).ToString("dd/MM/yyyy")));
                     _table.AddCell(_cell.AddStyle(styleDefinitionCell));
 
                     _table.SetMarginBottom(50f);
@@ -448,6 +451,7 @@ namespace Aplicacion.Evaluaciones
                 }
                 catch (Exception e)
                 {
+                    _logger.LogError(e, e.Message);
                     Console.WriteLine(e);
                     throw new Exception("No se pudo agregar al nuevo usuario", e);
                 }
