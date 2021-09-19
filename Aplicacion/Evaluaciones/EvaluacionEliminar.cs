@@ -37,9 +37,20 @@ namespace Aplicacion.Evaluaciones
                 }
 
                 var prueba= await _context.Prueba
-                    .Where(evR => evR.EvaluacionId == evaluacion.EvaluacionId)
+                    .Where(ev => ev.EvaluacionId == evaluacion.EvaluacionId)
+                    .ToListAsync();
+                foreach (var element in prueba)
+                {
+                    var evidenciaRequerimiento = await _context.EvidenciaRequerimiento
+
+                    .Where(evR => evR.PruebaId == element.PruebaId)
+
                     .ToListAsync();
 
+                    _context.EvidenciaRequerimiento.RemoveRange(evidenciaRequerimiento);
+                }
+
+                
                 _context.Prueba.RemoveRange(prueba);
 
                 _context.Evaluacion.Remove(evaluacion);
