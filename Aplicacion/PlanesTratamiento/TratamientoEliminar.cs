@@ -10,10 +10,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-
 namespace Aplicacion.PlanesTratamiento
 {
-   public class TratamientoEliminar
+    public class TratamientoEliminar
     {
         public class Ejecuta : IRequest
         {
@@ -39,11 +38,22 @@ namespace Aplicacion.PlanesTratamiento
                     throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensaje = "El tratamiento no existe" });
                 }
 
-                var tratamientos = await _context.Tratamiento
-                     .Where(T => T.TratamientoId == tratamiento.TratamientoId)
-                     .ToListAsync();
+                var accion = await _context.AccionMitigacion
+                    .Where(t => t.TratamientoId == tratamiento.TratamientoId)
+                    .ToListAsync();
+                foreach (var element in accion)
+                {
+                    var evidenciaRequerimiento = await _context.EvidenciaRequerimiento
 
-                _context.Tratamiento.RemoveRange(tratamientos);
+                    .Where(am => am.AccionMitigacionId== element.AccionMitigacionId)
+
+                    .ToListAsync();
+
+                    _context.EvidenciaRequerimiento.RemoveRange(evidenciaRequerimiento);
+                }
+
+
+                _context.AccionMitigacion.RemoveRange(accion);
 
                 _context.Tratamiento.Remove(tratamiento);
 
@@ -54,9 +64,10 @@ namespace Aplicacion.PlanesTratamiento
                     return Unit.Value;
                 }
 
-                throw new Exception("No se pudo eliminar el tratamiento");
+                throw new Exception("No se pudo eliminar la evaluacion");
             }
         }
     }
 }
+
 
