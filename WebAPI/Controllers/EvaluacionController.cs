@@ -49,14 +49,21 @@ namespace WebAPI.Controllers
 
             return File(bytesStream, "application/octet-stream");
         }
-
         [HttpGet("lista")]
+        public async Task<ActionResult<List<ObtenerEvaluacionesDto>>> Listar([FromQuery(Name = "filter")] string filter)
+        {
+            if (filter == null)
+                filter = "";
+            return await Mediator.Send(new Consulta.Listar { QueryLike = filter });
+        }
+
+        [HttpGet("listado")]
         public async Task<ActionResult<PaginacionModel>> Listar
-              ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
+      ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
         {
 
             //return await Mediator.Send(new Consulta.Listar { QueryLike = filter });  
-            return await Mediator.Send(new Consulta.Listar { NumeroPagina = page, CantidadElementos = quantity });
+            return await Mediator.Send(new ConsultaListado.Listar { NumeroPagina = page, CantidadElementos = quantity });
         }
 
         [HttpGet("statistics/resultados")]
@@ -107,6 +114,6 @@ namespace WebAPI.Controllers
         {
             return await Mediator.Send(new EvaluacionEliminar.Ejecuta { Id = id });
         }
-                
+
     }
 }
