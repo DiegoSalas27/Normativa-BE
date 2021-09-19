@@ -72,5 +72,11 @@ namespace WebAPI.Controllers
         {
             return await Mediator.Send(parametros);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Unit>> EliminarTratamiento(Guid id)
+        {
+            return await Mediator.Send(new TratamientoEliminar.Ejecuta { Id = id });
+        }        
     }
 }
