@@ -10,17 +10,19 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aplicacion.Evaluaciones
+namespace Aplicacion.PlanesTratamiento
 {
-    public class EvaluacionEliminar
+    public class TratamientoEliminar
     {
         public class Ejecuta : IRequest
         {
             public Guid Id { get; set; }
         }
 
+
         public class Manejador : IRequestHandler<Ejecuta>
         {
+
             private readonly NormativaContext _context;
 
             public Manejador(NormativaContext normativaContext)
@@ -30,30 +32,30 @@ namespace Aplicacion.Evaluaciones
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var evaluacion = await _context.Evaluacion.FindAsync(request.Id);
-                if (evaluacion == null)
+                var tratamiento = await _context.Tratamiento.FindAsync(request.Id);
+                if (tratamiento == null)
                 {
-                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensaje = "La evaluacion no existe" });
+                    throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensaje = "El tratamiento no existe" });
                 }
 
-                var prueba= await _context.Prueba
-                    .Where(ev => ev.EvaluacionId == evaluacion.EvaluacionId)
+                var accion = await _context.AccionMitigacion
+                    .Where(t => t.TratamientoId == tratamiento.TratamientoId)
                     .ToListAsync();
-                foreach (var element in prueba)
+                foreach (var element in accion)
                 {
                     var evidenciaRequerimiento = await _context.EvidenciaRequerimiento
 
-                    .Where(evR => evR.PruebaId == element.PruebaId)
+                    .Where(am => am.AccionMitigacionId== element.AccionMitigacionId)
 
                     .ToListAsync();
 
                     _context.EvidenciaRequerimiento.RemoveRange(evidenciaRequerimiento);
                 }
 
-                
-                _context.Prueba.RemoveRange(prueba);
 
-                _context.Evaluacion.Remove(evaluacion);
+                _context.AccionMitigacion.RemoveRange(accion);
+
+                _context.Tratamiento.Remove(tratamiento);
 
                 var valor = await _context.SaveChangesAsync();
 
@@ -67,3 +69,5 @@ namespace Aplicacion.Evaluaciones
         }
     }
 }
+
+
