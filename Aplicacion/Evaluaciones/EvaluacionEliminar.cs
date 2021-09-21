@@ -36,10 +36,10 @@ namespace Aplicacion.Evaluaciones
                     throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensaje = "La evaluacion no existe" });
                 }
 
-                var prueba= await _context.Prueba
+                var pruebas= await _context.Prueba   
                     .Where(ev => ev.EvaluacionId == evaluacion.EvaluacionId)
                     .ToListAsync();
-                foreach (var element in prueba)
+                foreach (var element in pruebas)
                 {
                     var evidenciaRequerimiento = await _context.EvidenciaRequerimiento
 
@@ -50,8 +50,13 @@ namespace Aplicacion.Evaluaciones
                     _context.EvidenciaRequerimiento.RemoveRange(evidenciaRequerimiento);
                 }
 
-                
-                _context.Prueba.RemoveRange(prueba);
+                var observaciones = await _context.Observacion
+                    .Where(ev => ev.EvaluacionId == evaluacion.EvaluacionId)
+                    .ToListAsync();
+
+
+                _context.Observacion.RemoveRange(observaciones);
+                _context.Prueba.RemoveRange(pruebas);
 
                 _context.Evaluacion.Remove(evaluacion);
 
