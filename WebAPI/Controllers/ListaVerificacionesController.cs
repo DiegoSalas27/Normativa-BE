@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Aplicacion.Dtos.statistics.ListaVerificacion;
+using Persistencia.DapperConexion.Paginacion;
+using Aplicacion.Paginacion;
 
 namespace WebAPI.Controllers
 {
@@ -17,6 +19,18 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<int>> ObtenerNumeroListasVerificacionCount()
         {
             return await Mediator.Send(new ConsultaCantidad.Listar());
+        }
+
+        [HttpGet("listar")]
+        public async Task<ActionResult<PaginacionModel>> ObtenerUsuariosPorRolPaginado(string rol,
+            [FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
+        {
+            return await Mediator.Send(new Paginacion.Ejecuta { 
+                Rol = rol, 
+                NumeroPagina = page, 
+                CantidadElementos = quantity, 
+                Entity = "ListaVerificacion"
+            });
         }
 
         [HttpGet("lista")]

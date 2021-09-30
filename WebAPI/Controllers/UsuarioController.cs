@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<PaginacionModel>> ObtenerUsuariosPorRolPaginado(string rol, 
             [FromQuery(Name="page")] int page, [FromQuery(Name = "quantity")] int quantity)
         {
-            return await Mediator.Send(new Paginacion.Ejecuta { Rol = rol, NumeroPagina = page, CantidadElementos = quantity });
+            return await Mediator.Send(new Paginacion.Ejecuta { Rol = rol, NumeroPagina = page, CantidadElementos = quantity, Entity = "Usuario" });
         }
 
         [HttpGet("lista/{rol}")]

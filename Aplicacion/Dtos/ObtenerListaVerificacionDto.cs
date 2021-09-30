@@ -14,6 +14,7 @@ namespace Aplicacion.Dtos
         public string Nombre { get; set; }
         public DateTime FechaCreacion { get; set; }
         public IEnumerable<ObtenerListaRequerimientoDto> Requerimientos { get; set; }
+        public IEnumerable<NivelesRiesgo>? NivelesRiesgos { get; set; } 
         public int RequerimientosCount { get; set; }
     }
 }

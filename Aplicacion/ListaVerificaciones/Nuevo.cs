@@ -1,3 +1,4 @@
+using Aplicacion.Dtos;
 using Aplicacion.ManejadorError;
 using Dominio;
 using MediatR;
@@ -17,8 +18,10 @@ namespace Aplicacion.ListaVerificaciones
     {
         public class Ejecuta : IRequest
         {
-            public string ListaVerificacionCodigo { get; set; }
-            public string ListaVerificacionNombre { get; set; }
+            public IList<Criterio> Criterios { get; set; }
+            public IList<Requerimiento> Requerimientos { get; set; }
+            public IList<NivelesRiesgo> NivelesRiesgo { get; set; }
+            public ObtenerListaVerificacionDto ListaVerificacion { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -29,29 +32,22 @@ namespace Aplicacion.ListaVerificaciones
                 this._context = context;
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
-            {
-                var listaVerificacionExists = await _context.ListaVerificacion.Where(lv => lv.Codigo == request.ListaVerificacionCodigo).FirstOrDefaultAsync();
+            {   
+                _context.Criterio.AddRange(request.Criterios);
 
-                if (listaVerificacionExists != null)
+                var listaVerificacion = new ListaVerificacion
                 {
-                    throw new ManejadorExcepcion(HttpStatusCode.BadRequest, new { mensaje = "Regresar" });
-                }
+                    ListaVerificacionId = request.ListaVerificacion.ListaVerificacionId,
+                    Codigo = request.ListaVerificacion.Codigo,
+                    FechaCreacion = DateTime.Now,
+                    Nombre = request.ListaVerificacion.Nombre,
+                };
 
-                if (listaVerificacionExists == null)
-                {
-                    var listaVerificacion = new ListaVerificacion
-                    {
-                        Codigo = request.ListaVerificacionCodigo,
-                        FechaCreacion = DateTime.Now,
-                        Nombre = request.ListaVerificacionNombre,
-                    };
+                _context.ListaVerificacion.Add(listaVerificacion);
 
-                    _context.ListaVerificacion.Add(listaVerificacion);
-                }
-                else
-                {
-                    listaVerificacionExists.Nombre = request.ListaVerificacionNombre;
-                }
+                _context.NivelesRiesgo.AddRange(request.NivelesRiesgo);
+
+                _context.Requerimiento.AddRange(request.Requerimientos);
 
                 var valor = await _context.SaveChangesAsync();
                 if (valor > 0)

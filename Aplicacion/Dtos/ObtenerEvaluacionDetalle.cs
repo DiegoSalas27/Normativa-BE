@@ -30,7 +30,7 @@ namespace Aplicacion.Dtos
         public int RequerimientosCount { get; set; }
         public IEnumerable<ObservacionListaDto> ObservacionLista { get; set; }
         public IEnumerable<PruebaDetalleListaDto> PruebaList { get; set; }
-        public Prueba? Prueba { get; set; } 
+        public Prueba? Prueba { get; set; }
         public string? NombreAnalista { get; set; }
         public string? ObraNombre { get; set; }
         public string? NombreListaVerificacion { get; set; }
@@ -41,5 +41,11 @@ namespace Aplicacion.Dtos
 
         public decimal? PorcentajeCumplimientoTotal { get; set; } = 0;
         public string? NivelDeRiesgo { get; set; }
+        public IEnumerable<ObservacionDesc>? Observaciones { get; set; }
+    }
+
+    public class ObservacionDesc 
+    { 
+        public string Descripcion { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace Aplicacion.Paginacion
             public string Rol { get; set; }
             public int NumeroPagina { get; set; }
             public int CantidadElementos { get; set; }
+            public string? Entity { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta, PaginacionModel>
@@ -26,9 +27,23 @@ namespace Aplicacion.Paginacion
             public async Task<PaginacionModel> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
                 var storedProcedure = "usp_obtener_paginacion_usuario";
-                //var ordenamiento = "Titulo";
                 var parametros = new Dictionary<string, object>();
-                parametros.Add("Rol", request.Rol);
+                switch (request.Entity) 
+                {
+                    case "Usuario": 
+                    {
+                        storedProcedure = "usp_obtener_paginacion_usuario";
+                        parametros.Add("Rol", request.Rol);
+                        break;
+                    }
+                    case "ListaVerificacion":
+                    {
+                        storedProcedure = "usp_obtener_paginacion_lista_verificacion";
+                        break;
+                    }
+                }
+
+                //var ordenamiento = "Titulo";
                 return await _paginacion.devolverPaginacion(
                     storedProcedure,
                     request.NumeroPagina,

@@ -112,7 +112,11 @@ namespace Aplicacion.Evaluaciones
                                     EvidenciaLink = er.Evidencia.AdjuntoURL
                                 }
                             }),
-                            NombreAnalista = ev.Usuario.Nombres + " " + ev.Usuario.Apellidos
+                            NombreAnalista = ev.Usuario.Nombres + " " + ev.Usuario.Apellidos,
+                            Observaciones = ev.ObservacionLista.Select(ol => new ObservacionDesc
+                            {
+                                Descripcion = ol.Descripcion
+                            })
                         })
                         .FirstOrDefaultAsync();
 
@@ -328,7 +332,7 @@ namespace Aplicacion.Evaluaciones
                                 switch (evidenciaRequerimiento.EvidenciaPruebaLink.RespuestaItem)
                                 {
                                     case 1: respuesta = "Totalmente"; break;
-                                    case (decimal?)0.5: respuesta = "Parcialmente"; break;
+                                    case (decimal?)0.5f: respuesta = "Parcialmente"; break;
                                     case 0: respuesta = "No implementado "; break;
                                     default: respuesta = "No Aplica "; break;
                                 }
@@ -415,15 +419,24 @@ namespace Aplicacion.Evaluaciones
 
                     Table _tableObsertions = new Table(1).UseAllAvailableWidth();
 
-                    cell = new Cell().Add(new Paragraph("Observaciones: ").SetFontSize(16).SetFont(bold))
+                    List list = new List();
+
+                    foreach (var observacion in evaluacion.Observaciones) 
+                    {
+                        list.SetListSymbol("•  ");
+                        list.Add(observacion.Descripcion);
+                    }
+                    cell = new Cell().Add(new Paragraph("Observaciones: \n").SetFontSize(16).SetFont(bold))
                        .SetTextAlignment(TextAlignment.LEFT)
                        .SetBorder(Border.NO_BORDER);
 
                     _tableObsertions.AddCell(cell);
 
-                    _tableObsertions.SetMarginBottom(100f);
+                    //_tableObsertions.SetMarginBottom(100f);
+                    list.SetMarginBottom(100f);
 
                     doc.Add(_tableObsertions);
+                    doc.Add(list);
 
                     // footer
 

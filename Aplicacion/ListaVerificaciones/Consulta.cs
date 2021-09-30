@@ -41,11 +41,21 @@ namespace Aplicacion.ListaVerificaciones
                         {
                             RequerimientoId = req.RequerimientoId,
                             Descripcion = req.Descripcion,
+                            CriterioId = req.CriterioId,
                             Criterio = new CriterioDto
                             {
+                                CriterioId = req.Criterio.CriterioId,
                                 Descripcion = req.Criterio.Descripcion,
                                 Peso = req.Criterio.Peso,
-                            }
+                            },
+                            Recomendacion = req.Recomendacion
+                        }),
+                        NivelesRiesgos = x.NivelesRiesgosList.Select(nr => new NivelesRiesgo
+                        {
+                            NivelesRiesgoId = nr.NivelesRiesgoId,
+                            Nombre = nr.Nombre,
+                            ExtMinimo = nr.ExtMinimo,
+                            ExtMaximo = nr.ExtMaximo
                         })
                     })
                     .Where(o => o.Nombre.Contains(request.QueryLike) || o.Codigo.Contains(request.QueryLike))
