@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Aplicacion.Dtos;
 
 namespace Aplicacion.ListaVerificaciones
 {
@@ -18,6 +19,7 @@ namespace Aplicacion.ListaVerificaciones
         public class Ejecuta : IRequest
         {
             public Guid ListaVerificacionId { get; set; }
+            public Nuevo.Ejecuta? Parametros { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -89,7 +91,17 @@ namespace Aplicacion.ListaVerificaciones
                     .Where(e => e.RequerimientoId == requerimiento.RequerimientoId)
                     .ToListAsync());
                 }
+                //criterios que depende de requerimientos
+                var criterios = new List<Criterio>();
+                foreach (var requerimiento in requerimientos)
+                {
+                    criterios.AddRange(await _context.Criterio
+                    .Where(e => e.CriterioId == requerimiento.CriterioId)
+                    .ToListAsync());
+                }
+
                 //removiendo
+                _context.Criterio.RemoveRange(criterios);
                 _context.EvidenciaRequerimiento.RemoveRange(evidenciasRequerimiento);
                 _context.Prueba.RemoveRange(pruebas);
                 _context.Comentario.RemoveRange(comentarios);

@@ -22,6 +22,7 @@ namespace Aplicacion.ListaVerificaciones
             public IList<Requerimiento> Requerimientos { get; set; }
             public IList<NivelesRiesgo> NivelesRiesgo { get; set; }
             public ObtenerListaVerificacionDto ListaVerificacion { get; set; }
+            public bool Update { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -29,11 +30,19 @@ namespace Aplicacion.ListaVerificaciones
             private readonly NormativaContext _context;
             public Manejador(NormativaContext context)
             {
-                this._context = context;
+                _context = context;
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
-            {   
-                _context.Criterio.AddRange(request.Criterios);
+            {
+                if (request.Update)
+                {
+                    var criterios = new List<Criterio>();
+                    _context.Criterio.AddRange(criterios);
+                }
+                else
+                {
+                    _context.Criterio.AddRange(request.Criterios);
+                }
 
                 var listaVerificacion = new ListaVerificacion
                 {

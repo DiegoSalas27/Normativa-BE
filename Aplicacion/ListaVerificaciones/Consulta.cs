@@ -42,6 +42,7 @@ namespace Aplicacion.ListaVerificaciones
                             RequerimientoId = req.RequerimientoId,
                             Descripcion = req.Descripcion,
                             CriterioId = req.CriterioId,
+                            ListaVerificacionId = req.ListaVerificacionId,
                             Criterio = new CriterioDto
                             {
                                 CriterioId = req.Criterio.CriterioId,
@@ -55,7 +56,8 @@ namespace Aplicacion.ListaVerificaciones
                             NivelesRiesgoId = nr.NivelesRiesgoId,
                             Nombre = nr.Nombre,
                             ExtMinimo = nr.ExtMinimo,
-                            ExtMaximo = nr.ExtMaximo
+                            ExtMaximo = nr.ExtMaximo,
+                            ListaVerificacionId = nr.ListaVerificacionId
                         })
                     })
                     .Where(o => o.Nombre.Contains(request.QueryLike) || o.Codigo.Contains(request.QueryLike))

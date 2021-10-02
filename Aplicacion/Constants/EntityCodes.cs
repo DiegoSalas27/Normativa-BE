@@ -11,6 +11,7 @@ namespace Aplicacion.Constants
         public const string Prueba = "PR";
         public const string Tratamiento = "TR";
         public const string Evaluacion = "EV";
+        public const string ListaVerificacion = "LV";
         public const string Evidencia = "ED";
         public const string Analistas = "AN";
         public const string Administrador = "AD";

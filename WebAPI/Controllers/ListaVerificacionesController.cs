@@ -21,6 +21,13 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ConsultaCantidad.Listar());
         }
 
+        [HttpGet("ultimoCodigo")]
+        public async Task<ActionResult<object>> ObtenerListaVerificacionLastCode()
+        {
+            return await Mediator.Send(new ConsultaUltimoCodigo.Listar());
+        }
+
+
         [HttpGet("listar")]
         public async Task<ActionResult<PaginacionModel>> ObtenerUsuariosPorRolPaginado(string rol,
             [FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
@@ -48,9 +55,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{listaVerificacionId}")]
-        public async Task<ActionResult<Unit>> ActualizarListaVerificacion(Guid listaVerificacionId, ListaVerificacionActualizar.Ejecuta parametros)
+        public async Task<ActionResult<Unit>> ActualizarListaVerificacion(Guid listaVerificacionId, Edita.Ejecuta parametros)
         {
-            parametros.ListaVerificacionId = listaVerificacionId;
             return await Mediator.Send(parametros);
         }
         [HttpPost]

@@ -1,4 +1,4 @@
-using Aplicacion.Dtos;
+﻿using Aplicacion.Dtos;
 using Dominio;
 using MediatR;
 using Persistencia;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Aplicacion.ListaVerificaciones
 {
-    public class ListaVerificacionActualizar
+    public class Edita
     {
         public class Ejecuta : IRequest
         {
@@ -24,26 +24,28 @@ namespace Aplicacion.ListaVerificaciones
         public class Manejador : IRequestHandler<Ejecuta>
         {
             private readonly NormativaContext _context;
-
-            public Manejador(
-                NormativaContext context)
+            public Manejador(NormativaContext context)
             {
                 _context = context;
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var listaVerificacion = await _context.ListaVerificacion.FindAsync(request.ListaVerificacion.ListaVerificacionId);
-
+                var listaVerificacion = _context.ListaVerificacion.Find(request.ListaVerificacion.ListaVerificacionId);
                 listaVerificacion.Nombre = request.ListaVerificacion.Nombre;
 
-                var resultado = await _context.SaveChangesAsync();
+                _context.Criterio.AddRange(request.Criterios);
 
-                if (resultado > 0)
+                _context.NivelesRiesgo.UpdateRange(request.NivelesRiesgo);
+
+                _context.Requerimiento.AddRange(request.Requerimientos);
+
+                var valor = await _context.SaveChangesAsync();
+                if (valor > 0)
                 {
                     return Unit.Value;
                 }
 
-                throw new Exception("No se pudo actualizar lista de verificacion");
+                throw new Exception("No se pudo insertar la lista de verificacion");
             }
         }
     }
