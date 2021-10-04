@@ -18,6 +18,7 @@ namespace Aplicacion.Evaluaciones
         {
             public int NumeroPagina { get; set; }
             public int CantidadElementos { get; set; }
+            public Dictionary<string, object> Parametros { get; set; } = new Dictionary<string, object>();
         }
 
         public class Manejador : IRequestHandler<Listar, PaginacionModel>
@@ -59,13 +60,12 @@ namespace Aplicacion.Evaluaciones
             }
             public async Task<PaginacionModel> Handle(Listar request, CancellationToken cancellationToken)
             {
-                var storedProcedure = "usp_obtener_paginacion_evaluacion";
-                var parametros = new Dictionary<string, object>();
+                var storedProcedure = "usp_obtener_paginacion_evaluacionV2";
                 return await _paginacion.devolverPaginacion(
                     storedProcedure,
                     request.NumeroPagina,
                     request.CantidadElementos,
-                    parametros,
+                    request.Parametros,
                     //ordenamiento
                     null
                 );
