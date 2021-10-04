@@ -65,9 +65,9 @@ namespace WebAPI.Controllers
             return await Mediator.Send(parametros);
         }
         [HttpDelete("{listaVerificacionId}")]
-        public async Task<ActionResult<Unit>> EliminarListaVerificacion(Guid listaVerificacionId)
+        public async Task<ActionResult<Unit>> EliminarListaVerificacion(Guid listaVerificacionId, [FromQuery(Name = "Update")] bool Update)
         {
-            return await Mediator.Send(new ListaVerificacionEliminar.Ejecuta { ListaVerificacionId = listaVerificacionId });
+            return await Mediator.Send(new ListaVerificacionEliminar.Ejecuta { ListaVerificacionId = listaVerificacionId, Update = Update });
         }
     }
 }

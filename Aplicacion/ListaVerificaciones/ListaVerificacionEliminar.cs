@@ -19,7 +19,7 @@ namespace Aplicacion.ListaVerificaciones
         public class Ejecuta : IRequest
         {
             public Guid ListaVerificacionId { get; set; }
-            public Nuevo.Ejecuta? Parametros { get; set; }
+            public bool Update { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -43,65 +43,86 @@ namespace Aplicacion.ListaVerificaciones
                 var requerimientos = await _context.Requerimiento
                     .Where(r => r.ListaVerificacionId == listaVerificacion.ListaVerificacionId)
                     .ToListAsync();
+
+                List<Guid> criteriosId = requerimientos.Select(re => re.CriterioId).Distinct().ToList();
+
                 //lista de niveles de riesgo
                 var nivelesRiesgo = await _context.NivelesRiesgo
                     .Where(nr => nr.ListaVerificacionId == listaVerificacion.ListaVerificacionId)
                     .ToListAsync();
-                //lista de evaluaciones
-                var evaluaciones = await _context.Evaluacion
-                    .Where(e => e.ListaVerificacionId == listaVerificacion.ListaVerificacionId)
-                    .ToListAsync();
-                //tratamiento que depende de evaluaciones
-                var tratamientos = new List<Tratamiento>();
-                foreach (var evaluacion in evaluaciones)
-                {
-                    tratamientos.AddRange(await _context.Tratamiento
-                    .Where(t => t.EvaluacionId == evaluacion.EvaluacionId)
-                    .ToListAsync());
-                }
-                //accion de mitigacion que depende de tratamiento
-                var accionesMitigacion = new List<AccionMitigacion>();
-                foreach (var tratamiento in tratamientos)
-                {
-                    accionesMitigacion.AddRange(await _context.AccionMitigacion
-                    .Where(am => am.TratamientoId == tratamiento.TratamientoId)
-                    .ToListAsync());
-                }
-                //comentario que depende de accion de mitigacion
-                var comentarios = new List<Comentario>();
-                foreach (var accionMitigacion in accionesMitigacion)
-                {
-                    comentarios.AddRange(await _context.Comentario
-                    .Where(c => c.AccionMitigacionId == accionMitigacion.AccionMitigacionId)
-                    .ToListAsync());
-                }
-                //prueba que depende de evaluaciones
-                var pruebas = new List<Prueba>();
-                foreach (var evaluacion in evaluaciones)
-                {
-                    pruebas.AddRange(await _context.Prueba
-                    .Where(p => p.EvaluacionId == evaluacion.EvaluacionId)
-                    .ToListAsync());
-                }
-                //evidencia de requerimientos que depende de requerimientos, accion de mitigacion y prueba
+
                 var evidenciasRequerimiento = new List<EvidenciaRequerimiento>();
-                foreach (var requerimiento in requerimientos)
-                {
-                    evidenciasRequerimiento.AddRange(await _context.EvidenciaRequerimiento
-                    .Where(e => e.RequerimientoId == requerimiento.RequerimientoId)
-                    .ToListAsync());
-                }
-                //criterios que depende de requerimientos
+                var pruebas = new List<Prueba>();
+                var comentarios = new List<Comentario>();
+                var accionesMitigacion = new List<AccionMitigacion>();
+                var tratamientos = new List<Tratamiento>();
+                var evaluaciones = new List<Evaluacion>();
                 var criterios = new List<Criterio>();
-                foreach (var requerimiento in requerimientos)
+
+                if (!request.Update)
                 {
-                    criterios.AddRange(await _context.Criterio
-                    .Where(e => e.CriterioId == requerimiento.CriterioId)
-                    .ToListAsync());
+                    //liUpdatesta de evaluaciones
+                    evaluaciones = await _context.Evaluacion
+                        .Where(e => e.ListaVerificacionId == listaVerificacion.ListaVerificacionId)
+                        .ToListAsync();
+                    //tratamiento que depende de evaluaciones
+
+                    foreach (var evaluacion in evaluaciones)
+                    {
+                        tratamientos.AddRange(await _context.Tratamiento
+                        .Where(t => t.EvaluacionId == evaluacion.EvaluacionId)
+                        .ToListAsync());
+                    }
+                    //accion de mitigacion que depende de tratamiento
+
+                    foreach (var tratamiento in tratamientos)
+                    {
+                        accionesMitigacion.AddRange(await _context.AccionMitigacion
+                        .Where(am => am.TratamientoId == tratamiento.TratamientoId)
+                        .ToListAsync());
+                    }
+                    //comentario que depende de accion de mitigacion
+
+                    foreach (var accionMitigacion in accionesMitigacion)
+                    {
+                        comentarios.AddRange(await _context.Comentario
+                        .Where(c => c.AccionMitigacionId == accionMitigacion.AccionMitigacionId)
+                        .ToListAsync());
+                    }
+                    //prueba que depende de evaluaciones
+
+                    foreach (var evaluacion in evaluaciones)
+                    {
+                        pruebas.AddRange(await _context.Prueba
+                        .Where(p => p.EvaluacionId == evaluacion.EvaluacionId)
+                        .ToListAsync());
+                    }
+                    //evidencia de requerimientos que depende de requerimientos, accion de mitigacion y prueba
+
+                    foreach (var requerimiento in requerimientos)
+                    {
+                        evidenciasRequerimiento.AddRange(await _context.EvidenciaRequerimiento
+                        .Where(e => e.RequerimientoId == requerimiento.RequerimientoId)
+                        .ToListAsync());
+                    }
+
+                    //criterios que depende de requerimientos
+                    foreach (var requerimiento in requerimientos)
+                    {
+                        criterios.AddRange(await _context.Criterio
+                        .Where(e => e.CriterioId == requerimiento.CriterioId)
+                        .ToListAsync());
+                    }
+                } 
+                else
+                {
+                    criterios = _context.Criterio
+                        .AsNoTracking()
+                        .Where(cr => criteriosId.Contains(cr.CriterioId))
+                        .ToList();
                 }
 
                 //removiendo
-                _context.Criterio.RemoveRange(criterios);
                 _context.EvidenciaRequerimiento.RemoveRange(evidenciasRequerimiento);
                 _context.Prueba.RemoveRange(pruebas);
                 _context.Comentario.RemoveRange(comentarios);
@@ -111,6 +132,7 @@ namespace Aplicacion.ListaVerificaciones
                 _context.Evaluacion.RemoveRange(evaluaciones);
                 _context.NivelesRiesgo.RemoveRange(nivelesRiesgo);
                 _context.ListaVerificacion.Remove(listaVerificacion);
+                _context.Criterio.RemoveRange(criterios);
 
                 var valor = await _context.SaveChangesAsync();
 

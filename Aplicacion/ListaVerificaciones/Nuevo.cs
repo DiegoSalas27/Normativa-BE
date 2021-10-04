@@ -34,15 +34,7 @@ namespace Aplicacion.ListaVerificaciones
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                if (request.Update)
-                {
-                    var criterios = new List<Criterio>();
-                    _context.Criterio.AddRange(criterios);
-                }
-                else
-                {
-                    _context.Criterio.AddRange(request.Criterios);
-                }
+                 _context.Criterio.AddRange(request.Criterios);
 
                 var listaVerificacion = new ListaVerificacion
                 {
