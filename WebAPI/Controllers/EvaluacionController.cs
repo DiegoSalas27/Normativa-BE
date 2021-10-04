@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
     public class EvaluacionController : MiControllerBase
     {
         [HttpGet("count")]
-        public async Task<ActionResult<int>> ObtenerNumeroEvaluacionesCount([FromQuery(Name = "visible")] bool? visible) 
+        public async Task<ActionResult<int>> ObtenerNumeroEvaluacionesCount([FromQuery(Name = "visible")] bool? visible)
         {
             return await Mediator.Send(new ConsultaCantidad.Listar { Visible = visible });
         }
@@ -59,11 +59,18 @@ namespace WebAPI.Controllers
 
         [HttpGet("listado")]
         public async Task<ActionResult<PaginacionModel>> Listar
-      ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
+      ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity, [FromQuery(Name = "obra")] string obra, [FromQuery(Name = "listVerif")] string listVerif)
         {
 
             //return await Mediator.Send(new Consulta.Listar { QueryLike = filter });  
-            return await Mediator.Send(new ConsultaListado.Listar { NumeroPagina = page, CantidadElementos = quantity });
+            return await Mediator.Send(new ConsultaListado.Listar
+            {
+                NumeroPagina = page,
+                CantidadElementos = quantity,
+                Parametros = new Dictionary<string, object> {
+                    { "obra" , obra },{ "listVerif" , listVerif }
+                }
+            });
         }
 
         [HttpGet("statistics/resultados")]
@@ -78,7 +85,7 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ConsultaCumplimientoStats.Listar());
         }
 
-         [HttpGet("statistics/cumplimientoprueba")]
+        [HttpGet("statistics/cumplimientoprueba")]
         public async Task<ActionResult<StatisticsEvaluacionCumplimientoPrueba>> EstadisticaCumplimientoPrueba()
         {
             return await Mediator.Send(new ConsultaCumplimientoPruebaStats.Listar());
@@ -109,7 +116,7 @@ namespace WebAPI.Controllers
             return await Mediator.Send(parametros);
         }
 
-        [HttpDelete("{id}")] 
+        [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> EliminarEvaluacion(Guid id)
         {
             return await Mediator.Send(new EvaluacionEliminar.Ejecuta { Id = id });

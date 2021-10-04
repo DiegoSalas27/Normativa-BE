@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿﻿using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -36,7 +36,9 @@ namespace Persistencia.DapperConexion.Paginacion
                 DynamicParameters parametros = new DynamicParameters();
                 foreach (var param in parametrosFiltro) // creacion de filtros para el sp
                 {
-                    parametros.Add("@" + param.Key, param.Value);
+
+                        parametros.Add("@" + param.Key, param.Value);
+                                        
                 }
 
                 parametros.Add("@NumeroPagina", numeroPagina);
