@@ -10,5 +10,7 @@ namespace Aplicacion.Dtos.statistics.ListaVerificacion
     {
         public List<decimal> StackedBarSeriesListaVerificacion { get; set; }
         public List<DateTime> XAxisListaVerificacionStacked { get; set; }
+
+        public List<string> StackedBarListas { get; set; }
     }
 }
