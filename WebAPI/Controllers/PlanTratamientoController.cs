@@ -28,13 +28,17 @@ namespace WebAPI.Controllers
 
         [HttpGet("lista")]
         public async Task<ActionResult<PaginacionModel>> Listar
-                    ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
+                    ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity, [FromQuery(Name = "plan")] string plan, [FromQuery(Name = "estadoPlan")] string estadoPlan)
         {
             //parametros.CantidadElementos = quantity;
             //parametros.NumeroPagina = page;
 
             //return await Mediator.Send(parametros);
-            return await Mediator.Send(new Consulta.Listar { NumeroPagina = page, CantidadElementos = quantity });
+            return await Mediator.Send(new Consulta.Listar { NumeroPagina = page, CantidadElementos = quantity,
+                Parametros = new Dictionary<string, object> {
+                    { "plan" , plan },{ "estadoPlan" , estadoPlan }
+                }
+            });
         }
 
         [HttpGet("{tratamientoCodigo}")]

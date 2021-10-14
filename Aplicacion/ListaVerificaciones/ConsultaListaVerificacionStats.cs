@@ -1,4 +1,5 @@
-﻿using Aplicacion.Dtos.statistics;
+﻿using Aplicacion.Dtos;
+using Aplicacion.Dtos.statistics;
 using Aplicacion.Dtos.statistics.ListaVerificacion;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -42,14 +43,32 @@ namespace Aplicacion.ListaVerificaciones
                     */
 
                 var evaluacionListaVerificacionList = await _context.Evaluacion
+             
                       .Select(ev => new EvaluacionResultStatsDto
                       {
                           Prueba = ev.PruebaList.Where(pl => pl.Visbilidad == true).OrderByDescending(pl => pl.FechaCreacion).FirstOrDefault(),
                           Visbilidad = ev.Visbilidad,
-                          Nombre = ev.Nombre
-                      })
+                          Nombre = ev.Nombre,
+                           ListaVerificacionId=ev.ListaVerificacionId
+                      }
+
+                      )
+                      
 
                         .Where(ev => ev.Prueba != null && ev.Visbilidad == true)
+
+
+                        .ToListAsync();
+
+                var evaluacionListaVerificacionLista = await _context.ListaVerificacion
+                      .Select(lv => new ObtenerListaVerificacionDto
+                      {
+                          ListaVerificacionId = lv.ListaVerificacionId,
+                          Nombre = lv.Nombre,
+
+                      }
+
+                      )
 
                         .ToListAsync();
 
@@ -71,8 +90,28 @@ namespace Aplicacion.ListaVerificaciones
                     StackedBarSeriesListaVerificacion.Add(evaluacion.Prueba.PorcentajeCumplimiento);
                 }
 
+                var StackedBarListas = new List<string>();
+
+                foreach (var evaluacion in evaluacionListaVerificacionList)
+                {
+
+                    foreach(var listaverificacion in evaluacionListaVerificacionLista)
+                    {
+                        if(evaluacion.ListaVerificacionId==listaverificacion.ListaVerificacionId)
+                            StackedBarListas.Add(listaverificacion.Nombre);
+                    }
+                    // count++;
+                    //porcentajePromedio += evaluacion.Prueba.PorcentajeCumplimiento;
+                   
+                }
+
+                
+
+
+
                 var response = new StatisticsListaVerificacion
                 {
+                    StackedBarListas= StackedBarListas,
                     StackedBarSeriesListaVerificacion = StackedBarSeriesListaVerificacion,
                     XAxisListaVerificacionStacked = XAxisListaVerificacionStacked,
 

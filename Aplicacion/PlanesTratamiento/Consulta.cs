@@ -14,6 +14,8 @@ namespace Aplicacion.PlanesTratamiento
            // public string Estado { get; set; }
             public int NumeroPagina { get; set; }
             public int CantidadElementos { get; set; }
+
+            public Dictionary<string, object> Parametros { get; set; } = new Dictionary<string, object>();
         }
 
         public class Manejador : IRequestHandler<Listar, PaginacionModel>
@@ -50,15 +52,15 @@ namespace Aplicacion.PlanesTratamiento
             }
             public async Task<PaginacionModel> Handle(Listar request, CancellationToken cancellationToken)
             {
-                var storedProcedure = "usp_obtener_paginacion_plan_tratamiento";
+                var storedProcedure = "usp_obtener_paginacion_plan_tratamientoV2";
                 //var ordenamiento = "Titulo";
-                var parametros = new Dictionary<string, object>();
+                //var parametros = new Dictionary<string, object>();
                // parametros.Add("Estado", request.Estado);
                 return await _paginacion.devolverPaginacion(
                     storedProcedure,
                     request.NumeroPagina,
                     request.CantidadElementos,
-                    parametros,
+                    request.Parametros,
                     //ordenamiento
                     null
                 );
