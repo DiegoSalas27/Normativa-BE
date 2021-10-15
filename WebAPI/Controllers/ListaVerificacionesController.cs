@@ -30,13 +30,16 @@ namespace WebAPI.Controllers
 
         [HttpGet("listar")]
         public async Task<ActionResult<PaginacionModel>> ObtenerUsuariosPorRolPaginado(string rol,
-            [FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity)
+            [FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity, [FromQuery(Name = "listaVerif")] string listaVerif)
         {
             return await Mediator.Send(new Paginacion.Ejecuta { 
                 Rol = rol, 
                 NumeroPagina = page, 
                 CantidadElementos = quantity, 
-                Entity = "ListaVerificacion"
+                Entity = "ListaVerificacion",
+                Parametros = new Dictionary<string, object> {
+                  { "listaVerif" , listaVerif }
+                }
             });
         }
 
