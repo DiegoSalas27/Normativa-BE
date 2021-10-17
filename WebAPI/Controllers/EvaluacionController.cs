@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
 
         [HttpGet("listado")]
         public async Task<ActionResult<PaginacionModel>> Listar
-      ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity, [FromQuery(Name = "obra")] string obra, [FromQuery(Name = "listVerif")] string listVerif)
+      ([FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity, [FromQuery(Name = "obra")] string obra, [FromQuery(Name = "listVerif")] string listVerif, [FromQuery(Name = "evaluacion")] string evaluacion)
         {
 
             //return await Mediator.Send(new Consulta.Listar { QueryLike = filter });  
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
                 NumeroPagina = page,
                 CantidadElementos = quantity,
                 Parametros = new Dictionary<string, object> {
-                    { "obra" , obra },{ "listVerif" , listVerif }
+                    { "obra" , obra },{ "listVerif" , listVerif },{"evaluacion",evaluacion}
                 }
             });
         }
