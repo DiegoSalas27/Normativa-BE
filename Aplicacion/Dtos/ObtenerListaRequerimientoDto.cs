@@ -16,6 +16,7 @@ namespace Aplicacion.Dtos
         public CriterioDto Criterio { get; set; }
         public IEnumerable<NivelesRiesgo> NivelesRiesgos { get; set; }
         public string Recomendacion { get; set; }
-        
+        //public DateTime createdAt { get; set; }
+        public DateTime updatedAt { get; set; }
     }
 }

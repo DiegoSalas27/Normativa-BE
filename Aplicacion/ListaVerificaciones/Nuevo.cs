@@ -48,7 +48,16 @@ namespace Aplicacion.ListaVerificaciones
 
                 _context.NivelesRiesgo.AddRange(request.NivelesRiesgo);
 
-                _context.Requerimiento.AddRange(request.Requerimientos);
+               // _context.Requerimiento.AddRange(request.Requerimientos);
+
+                int temporal = 0;
+                
+                foreach (var element in request.Requerimientos)
+                {
+                    temporal++;
+                    element.updatedAt = DateTime.Now.AddSeconds(temporal);
+                    _context.Requerimiento.Add(element);
+                }
 
                 var valor = await _context.SaveChangesAsync();
                 if (valor > 0)

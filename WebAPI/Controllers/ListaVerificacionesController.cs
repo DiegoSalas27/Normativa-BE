@@ -32,10 +32,11 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<PaginacionModel>> ObtenerUsuariosPorRolPaginado(string rol,
             [FromQuery(Name = "page")] int page, [FromQuery(Name = "quantity")] int quantity, [FromQuery(Name = "listaVerif")] string listaVerif)
         {
-            return await Mediator.Send(new Paginacion.Ejecuta { 
-                Rol = rol, 
-                NumeroPagina = page, 
-                CantidadElementos = quantity, 
+            return await Mediator.Send(new Paginacion.Ejecuta
+            {
+                Rol = rol,
+                NumeroPagina = page,
+                CantidadElementos = quantity,
                 Entity = "ListaVerificacion",
                 Parametros = new Dictionary<string, object> {
                   { "listaVerif" , listaVerif }
@@ -44,11 +45,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("lista")]
-        public async Task<ActionResult<List<ObtenerListaVerificacionDto>>> Listar([FromQuery(Name = "filter")] string filter)
+        public async Task<ActionResult<List<ObtenerListaVerificacionDto>>> Listar([FromQuery(Name = "filter")] string filter, [FromQuery(Name = "nuevo")] int nuevo)
         {
-            if (filter == null)
-                filter = "";
-            return await Mediator.Send(new Consulta.Listar { QueryLike = filter });
+            if (filter == null || nuevo == null)
+            { filter = ""; nuevo = 0; }
+
+
+            return await Mediator.Send(new Consulta.Listar { QueryLike = filter, nuevo = nuevo });
         }
 
         [HttpGet("statistics/lista")]
