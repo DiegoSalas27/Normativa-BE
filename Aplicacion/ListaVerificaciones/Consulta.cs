@@ -18,6 +18,7 @@ namespace Aplicacion.ListaVerificaciones
         public class Listar : IRequest<List<ObtenerListaVerificacionDto>>
         {
             public string QueryLike { get; set; }
+            public int nuevo { get; set; }
         }
 
         public class Manejador : IRequestHandler<Listar, List<ObtenerListaVerificacionDto>>
@@ -29,41 +30,91 @@ namespace Aplicacion.ListaVerificaciones
             }
             public async Task<List<ObtenerListaVerificacionDto>> Handle(Listar request, CancellationToken cancellationToken)
             {
-                var listasVerificacion = await _context.ListaVerificacion
-                    .Select(x => new ObtenerListaVerificacionDto
-                    {
-                        ListaVerificacionId = x.ListaVerificacionId,
-                        Codigo = x.Codigo,
-                        Nombre = x.Nombre,
-                        FechaCreacion = x.FechaCreacion,
-                        RequerimientosCount = x.RequerimientoList.Count,
-                        Requerimientos = x.RequerimientoList.Select(req => new ObtenerListaRequerimientoDto
+                if (request.nuevo!=0)
+                {
+                    var listasVerificacion = await _context.ListaVerificacion
+                        .Select(x => new ObtenerListaVerificacionDto
                         {
-                            RequerimientoId = req.RequerimientoId,
-                            Descripcion = req.Descripcion,
-                            CriterioId = req.CriterioId,
-                            ListaVerificacionId = req.ListaVerificacionId,
-                            Criterio = new CriterioDto
+                            ListaVerificacionId = x.ListaVerificacionId,
+                            Codigo = x.Codigo,
+                            Nombre = x.Nombre,
+                            FechaCreacion = x.FechaCreacion,
+                            RequerimientosCount = x.RequerimientoList.Count,
+                            Requerimientos = x.RequerimientoList.Select(req => new ObtenerListaRequerimientoDto
                             {
-                                CriterioId = req.Criterio.CriterioId,
-                                Descripcion = req.Criterio.Descripcion,
-                                Peso = req.Criterio.Peso,
-                            },
-                            Recomendacion = req.Recomendacion
-                        }),
-                        NivelesRiesgos = x.NivelesRiesgosList.Select(nr => new NivelesRiesgo
-                        {
-                            NivelesRiesgoId = nr.NivelesRiesgoId,
-                            Nombre = nr.Nombre,
-                            ExtMinimo = nr.ExtMinimo,
-                            ExtMaximo = nr.ExtMaximo,
-                            ListaVerificacionId = nr.ListaVerificacionId
-                        })
-                    })
-                    .Where(o => o.Nombre.Contains(request.QueryLike) || o.Codigo.Contains(request.QueryLike))
-                    .ToListAsync();
+                                RequerimientoId = req.RequerimientoId,
+                                Descripcion = req.Descripcion,
+                                CriterioId = req.CriterioId,
+                                ListaVerificacionId = req.ListaVerificacionId,
+                                //createdAt=req.createdAt,
 
-                return listasVerificacion;
+                                Criterio = new CriterioDto
+                                {
+                                    CriterioId = req.Criterio.CriterioId,
+                                    Descripcion = req.Criterio.Descripcion,
+                                    Peso = req.Criterio.Peso,
+                                },
+                                Recomendacion = req.Recomendacion,
+                                //updatedAt = req.updatedAt
+                            }),
+                            NivelesRiesgos = x.NivelesRiesgosList.Select(nr => new NivelesRiesgo
+                            {
+                                NivelesRiesgoId = nr.NivelesRiesgoId,
+                                Nombre = nr.Nombre,
+                                ExtMinimo = nr.ExtMinimo,
+                                ExtMaximo = nr.ExtMaximo,
+                                ListaVerificacionId = nr.ListaVerificacionId
+                            })
+                        })
+
+                        .Where(o => o.Nombre.Contains(request.QueryLike) || o.Codigo.Contains(request.QueryLike))
+                        .ToListAsync();
+
+                    return listasVerificacion;
+                }
+
+                else
+                {
+                    var listasVerificacion = await _context.ListaVerificacion
+                        .Select(x => new ObtenerListaVerificacionDto
+                        {
+                            ListaVerificacionId = x.ListaVerificacionId,
+                            Codigo = x.Codigo,
+                            Nombre = x.Nombre,
+                            FechaCreacion = x.FechaCreacion,
+                            RequerimientosCount = x.RequerimientoList.Count,
+                            Requerimientos = x.RequerimientoList.Select(req => new ObtenerListaRequerimientoDto
+                            {
+                                RequerimientoId = req.RequerimientoId,
+                                Descripcion = req.Descripcion,
+                                CriterioId = req.CriterioId,
+                                ListaVerificacionId = req.ListaVerificacionId,
+                                                    //createdAt=req.createdAt,
+
+                                                    Criterio = new CriterioDto
+                                {
+                                    CriterioId = req.Criterio.CriterioId,
+                                    Descripcion = req.Criterio.Descripcion,
+                                    Peso = req.Criterio.Peso,
+                                },
+                                Recomendacion = req.Recomendacion,
+                                updatedAt = req.updatedAt
+                            }).OrderBy(xd => xd.updatedAt).ToList(),
+                            NivelesRiesgos = x.NivelesRiesgosList.Select(nr => new NivelesRiesgo
+                            {
+                                NivelesRiesgoId = nr.NivelesRiesgoId,
+                                Nombre = nr.Nombre,
+                                ExtMinimo = nr.ExtMinimo,
+                                ExtMaximo = nr.ExtMaximo,
+                                ListaVerificacionId = nr.ListaVerificacionId
+                            })
+                        })
+
+                        .Where(o => o.Nombre.Contains(request.QueryLike) || o.Codigo.Contains(request.QueryLike))
+                        .ToListAsync();
+                    return listasVerificacion;
+                }
+               
             }
         }
     }

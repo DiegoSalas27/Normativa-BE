@@ -15,6 +15,8 @@ namespace Dominio
         public string Recomendacion { get; set; }
         public ListaVerificacion VerificacionLista { get; set; }
         public Criterio Criterio { get; set; }
+       // public DateTime createdAt { get; set; }
+        public DateTime updatedAt { get; set; }
         public ICollection<EvidenciaRequerimiento> EvidenciaPruebaLink { get; set; }
     }
 }
