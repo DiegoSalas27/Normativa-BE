@@ -30,11 +30,11 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new ObtenerResultadosPrueba.Listar { PruebaCodigo = pruebaCodigo });
         }
 
-        [HttpGet("{pruebaCodigo}/{porcentajeDeseado}")]
-        public async Task<ActionResult<List<ObtenerListaEvidenciaRequerimientoDto>>> ObtenerResultadosDeOptimizacion(string pruebaCodigo, decimal porcentajeDeseado)
+        [HttpGet("{pruebaCodigo}/{porcentajeDeseado}/{margen}")]
+        public async Task<ActionResult<List<ObtenerListaEvidenciaRequerimientoDto>>> ObtenerResultadosDeOptimizacion(string pruebaCodigo, decimal porcentajeDeseado,decimal margen)
         {
             var response = await Mediator.Send(new ObtenerResultadosPrueba.Listar { PruebaCodigo = pruebaCodigo });
-            var ids = await Mediator.Send(new OptimizationRequest.Listar { PorcentajeDeseado = porcentajeDeseado, Response = response });
+            var ids = await Mediator.Send(new OptimizationRequest.Listar { PorcentajeDeseado = porcentajeDeseado, Margen=margen, Response = response });
             return await Mediator.Send(new ConsultaLista.Listar { PruebaCodigo = pruebaCodigo, Ids = ids });
         }
 

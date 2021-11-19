@@ -24,6 +24,7 @@ namespace Aplicacion.Pruebas
         public class Listar : IRequest<List<Guid>>
         {
             public decimal PorcentajeDeseado { get; set; }
+            public decimal Margen { get; set; }
             public ResultadoPruebaDto Response { get; set; }
         }
 
@@ -47,6 +48,10 @@ namespace Aplicacion.Pruebas
 
                     using (var httpClient = new HttpClient())
                     {
+
+                       
+                        httpClient.Timeout = TimeSpan.FromMinutes(10);
+
                         var serializer = new JsonSerializer()
                         {
                             ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -56,7 +61,7 @@ namespace Aplicacion.Pruebas
 
                         StringContent content = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
 
-                        using (var response = await httpClient.PostAsync("https://dry-earth-03574.herokuapp.com/api/enhance/" + request.PorcentajeDeseado, content))
+                       using (var response = await httpClient.PostAsync("https://algoritmo-mitigaciones-ejs.herokuapp.com/api/enhance/" + request.PorcentajeDeseado +'/'+ request.Margen, content))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
                             var responseFinal = JsonConvert.DeserializeObject<HerokuResponseDto>(apiResponse);
@@ -74,7 +79,7 @@ namespace Aplicacion.Pruebas
                     Console.WriteLine(e);
                     throw new ManejadorExcepcion(HttpStatusCode.BadRequest, new { mensaje = "Por favor intente con otro valor" });
                 }
-            }
+            } 
         }
     }
 }
