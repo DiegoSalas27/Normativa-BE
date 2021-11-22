@@ -54,6 +54,13 @@ namespace WebAPI.Controllers
             return await Mediator.Send(new Consulta.Listar { QueryLike = filter, nuevo = nuevo });
         }
 
+        [HttpGet("listados")]
+        public async Task<ActionResult<StatisticsListaVerificacion>> ListadosListaVerificacion()
+        {
+            return await Mediator.Send(new ConsultaListados.Listar());
+        }
+
+
         [HttpGet("statistics/lista")]
         public async Task<ActionResult<StatisticsListaVerificacion>> EstadisticaListaVerificacion()
         {
