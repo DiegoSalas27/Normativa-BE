@@ -23,5 +23,18 @@ namespace Aplicacion.Dtos
         public Guid? TratamientoId { get; set; }
         public string? TratamientoCodigo { get; set; }
         public bool AccionMigitagcion { get; set; }
+
+        
+    }
+    public class ObtenerObjetoAccionesMitigacionDto
+    {
+        public List<Guid>requeid { get; set; }
+        public string? limit { get; set; }
+        
+    }
+    public class ObtenerObjetoAccionesMitigacionVersion2Dto
+    {
+        public string? limit { get; set; }
+        public List<ObtenerListaEvidenciaRequerimientoDto>reque2 { get; set; }
     }
 }

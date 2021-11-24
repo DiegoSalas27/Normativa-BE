@@ -1,4 +1,5 @@
-﻿using Aplicacion.Dtos;
+﻿using Aplicacion.AccionesMitigacion;
+using Aplicacion.Dtos;
 using Aplicacion.EvidenciaRequerimientos;
 using Aplicacion.Pruebas;
 using MediatR;
@@ -31,11 +32,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{pruebaCodigo}/{porcentajeDeseado}/{margen}")]
-        public async Task<ActionResult<List<ObtenerListaEvidenciaRequerimientoDto>>> ObtenerResultadosDeOptimizacion(string pruebaCodigo, decimal porcentajeDeseado,decimal margen)
+        public async Task<ActionResult<ObtenerObjetoAccionesMitigacionVersion2Dto>> ObtenerResultadosDeOptimizacion(string pruebaCodigo, decimal porcentajeDeseado,decimal margen)
         {
             var response = await Mediator.Send(new ObtenerResultadosPrueba.Listar { PruebaCodigo = pruebaCodigo });
             var ids = await Mediator.Send(new OptimizationRequest.Listar { PorcentajeDeseado = porcentajeDeseado, Margen=margen, Response = response });
-            return await Mediator.Send(new ConsultaLista.Listar { PruebaCodigo = pruebaCodigo, Ids = ids });
+            return await Mediator.Send(new AccionMitigacionNuevo.Listar { PruebaCodigo = pruebaCodigo, Ids = ids });
         }
 
         [HttpPut("activar/{pruebaCodigo}")]

@@ -21,14 +21,14 @@ namespace Aplicacion.Pruebas
 {
     public class OptimizationRequest
     {
-        public class Listar : IRequest<List<Guid>>
+        public class Listar : IRequest<ObtenerObjetoAccionesMitigacionDto>
         {
             public decimal PorcentajeDeseado { get; set; }
             public decimal Margen { get; set; }
             public ResultadoPruebaDto Response { get; set; }
         }
 
-        public class Manejador : IRequestHandler<Listar, List<Guid>>
+        public class Manejador : IRequestHandler<Listar, ObtenerObjetoAccionesMitigacionDto>
         {
             private readonly NormativaContext _context;
             private IMediator _mediator;
@@ -38,13 +38,15 @@ namespace Aplicacion.Pruebas
             {
                 _context = context;
             }
-            public async Task<List<Guid>> Handle(Listar request, CancellationToken cancellationToken)
+            public async Task<ObtenerObjetoAccionesMitigacionDto> Handle(Listar request, CancellationToken cancellationToken)
             {
                 try
                 {
                     var responseObtener = request.Response;
 
                     var arrayList = new List<Guid>();
+
+                    var porcentaje = "";
 
                     using (var httpClient = new HttpClient())
                     {
@@ -61,18 +63,19 @@ namespace Aplicacion.Pruebas
 
                         StringContent content = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
 
-                       using (var response = await httpClient.PostAsync("https://algoritmo-mitigaciones-ejs.herokuapp.com/api/enhance/" + request.PorcentajeDeseado +'/'+ request.Margen, content))
+                        using (var response = await httpClient.PostAsync("https://algoritmo-mitigaciones-ejs.herokuapp.com/api/enhance/" + request.PorcentajeDeseado +'/'+ request.Margen, content))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
                             var responseFinal = JsonConvert.DeserializeObject<HerokuResponseDto>(apiResponse);
+                            porcentaje = responseFinal.limit;
                             foreach (var result in responseFinal.objResult)
                             {
                                 arrayList.Add(result.requerimientoId);
                             }
                         }
                     }
-
-                    return arrayList;
+                    var cosito = new ObtenerObjetoAccionesMitigacionDto { requeid = arrayList, limit = porcentaje };
+                    return cosito;
                 }
                 catch (Exception e)
                 {

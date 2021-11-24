@@ -11,6 +11,7 @@ namespace Aplicacion.Dtos
     {
         public IEnumerable<ObjResultDto> objResult { get; set; }
         public string porcentajeCumplimientoTotal { get; set; }
+        public string limit { get; set; }        
     }
 
     public class ObjResultDto
